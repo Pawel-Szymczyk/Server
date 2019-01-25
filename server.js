@@ -1,7 +1,32 @@
-var express = require('express'),
-  app = express(),
-  port = process.env.PORT || 3000;
+// -------------------------------------------------
+// Import libraries.
+//
+var express = require('express');
+var bodyParser = require("body-parser");
+// -------------------------------------------------
 
-app.listen(port);
+// -------------------------------------------------
+// Import ...
+//
 
-console.log('todo list RESTful API server started on: ' + port);
+// -------------------------------------------------
+
+var app = express();
+
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+
+// -------------------------------------------------
+// Import routes.
+//
+var rollets = require('./api/routes/RolletRoutes');
+
+// Registering routes.
+rollets(app); 
+
+// -------------------------------------------------
+
+var port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log("app running on port.", port);
+});
