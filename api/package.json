@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "This is server API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "server",
+    "mqtt",
+    "api",
+    "restful"
+  ],
+  "author": "Pawel Szymczyk",
+  "license": "ISC"
+}
