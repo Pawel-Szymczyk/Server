@@ -1,11 +1,12 @@
 const mqtt = require('mqtt');
+const env = require('../config/env');
 
 class MqttHandler {
   constructor() {
     this.mqttClient = null;
-    this.host = 'mqtt://192.168.0.11:8080';
-    this.username = 'MosquittoAdmin'; // mqtt credentials if these are needed to connect
-    this.password = '9Mosq1TT0pSw';
+    this.host = env.mqttHost;
+    this.username = env.mqttUsername; // mqtt credentials if these are needed to connect
+    this.password = env.mqttPassword;
 
     this.retMessage = 'x';
   }

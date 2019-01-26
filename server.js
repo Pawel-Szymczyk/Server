@@ -26,16 +26,14 @@ var mqttClient = new mqttHandler();
 // db.sequelize.sync({force: true}).then(() => {
 //     console.log('Drop and Resync with { force: true }');
 //   });
+
 // -------------------------------------------------
 // Import routes.
 //
 require('./api/routes/device.route')(app);
 require('./api/routes/user.route')(app);
 require('./api/routes/area.route')(app);
-var rollets = require('./api/routes/rollet.route');
-
-// Registering routes.
-rollets(app, mqttClient); 
+require('./api/routes/rollet.route')(app, mqttClient);
 
 // -------------------------------------------------
 
