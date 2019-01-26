@@ -19,6 +19,7 @@ var app = express();
 
 var mqttClient = new mqttHandler();
     mqttClient.connect();
+    
 
 // -------------------------------------------------
 // Import routes.

@@ -18,11 +18,16 @@ module.exports = function (app, mqtt) {
                 
 
                 mqtt.sendMessage('/devices/rollet/update', JSON.stringify(object));
-
+                let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
 
                 rollet.changeRolletPosition(); // update db here ?
-                //console.log(mqtt);
-                res.status(200).send("Message sent to mqtt");
+
+                res.status(200).send(object);
+                // if(message !== 'x'){
+                //     res.status(200).send(JSON.parse(message));
+                // } else {
+                //     res.status(200).send(object);
+                // }
 
                 
                 

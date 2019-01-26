@@ -7,7 +7,10 @@ class MqttHandler {
     this.username = 'MosquittoAdmin'; // mqtt credentials if these are needed to connect
     this.password = '9Mosq1TT0pSw';
 
+    this.retMessage = 'x';
   }
+
+
   
   connect() {
 
@@ -31,14 +34,13 @@ class MqttHandler {
     this.mqttClient.subscribe('/devices/light', {qos: 1});
 
     // When a message arrives, console.log it
-    this.mqttClient.on('message', function (topic, message) {
-     // console.log(message.toString());
-      // use some method to receive the mesage. <here> !
-        var msg = message.toString();
-        if(topic === '/devices/rollet/update') {
-            // put here a method to read message 
-        }
-    });
+    // this.mqttClient.on('message', function (topic, message) {
+    //  // console.log(message.toString());
+    //   // use some method to receive the mesage. <here> !
+    //      var msg = message.toString();
+    //     // console.log(msg);
+    //     this.message = msg;
+    // });
 
     this.mqttClient.on('close', () => {
       console.log(`mqtt client disconnected`);
@@ -48,6 +50,19 @@ class MqttHandler {
   // Sends a mqtt message to topic
   sendMessage(topic, message) {
     this.mqttClient.publish(topic, message);
+  }
+
+  getMessages() {
+      this.mqttClient.on('message', (topic, message) => {
+           var msg = message.toString();
+        //    console.log("hehehehe")
+          //  console.log(msg);
+            this.retMessage = msg;
+
+       });
+
+        return this.retMessage;
+       
   }
 
   
