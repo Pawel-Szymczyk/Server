@@ -4,13 +4,30 @@ module.exports = function (app, mqtt) {
   
     // get controller (db) here
     var rollet = require('../controllers/RolletController');
-
+ 
     app.route('/api/devices/rollet')
         .post(
-            (req, res) => {
-                mqttClient.sendMessage({"state":"on","action":"stop"}, '/devices/rollet/update');
+            
+            function(req, res) {
+                
+                var object = {
+                    state: req.body.state,
+                    action: req.body.action
+                };
+
+                
+
+                mqtt.sendMessage('/devices/rollet/update', JSON.stringify(object));
+
+
+                rollet.changeRolletPosition();
+                //console.log(mqtt);
                 res.status(200).send("Message sent to mqtt");
+
+                
+                
             }
+            
         );
     
 

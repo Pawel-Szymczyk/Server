@@ -6,6 +6,7 @@ class MqttHandler {
     this.host = 'mqtt://192.168.0.11:8080';
     this.username = 'MosquittoAdmin'; // mqtt credentials if these are needed to connect
     this.password = '9Mosq1TT0pSw';
+
   }
   
   connect() {
@@ -29,6 +30,7 @@ class MqttHandler {
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
       console.log(message.toString());
+      // use some method to receive the mesage. <here> !
     });
 
     this.mqttClient.on('close', () => {
@@ -36,10 +38,12 @@ class MqttHandler {
     });
   }
 
-  // Sends a mqtt message to topic: mytopic
+  // Sends a mqtt message to topic
   sendMessage(topic, message) {
     this.mqttClient.publish(topic, message);
   }
+
+
 }
 
 module.exports = MqttHandler;
