@@ -20,7 +20,7 @@ module.exports = function (app, mqtt) {
                 mqtt.sendMessage('/devices/rollet/update', JSON.stringify(object));
 
 
-                rollet.changeRolletPosition();
+                rollet.changeRolletPosition(); // update db here ?
                 //console.log(mqtt);
                 res.status(200).send("Message sent to mqtt");
 

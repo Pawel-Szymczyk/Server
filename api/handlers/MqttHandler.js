@@ -10,6 +10,7 @@ class MqttHandler {
   }
   
   connect() {
+
     // Connect mqtt with credentials (in case of needed, otherwise we can omit 2nd param)
     this.mqttClient = mqtt.connect(this.host, { username: this.username, password: this.password });
 
@@ -25,12 +26,18 @@ class MqttHandler {
     });
 
     // mqtt subscriptions
-    this.mqttClient.subscribe('/devices/rollet/update', {qos: 0});
+    this.mqttClient.subscribe('/devices/rollet/update', {qos: 1});
+    this.mqttClient.subscribe('/devices/rgb', {qos: 1});
+    this.mqttClient.subscribe('/devices/light', {qos: 1});
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
-      console.log(message.toString());
+     // console.log(message.toString());
       // use some method to receive the mesage. <here> !
+        var msg = message.toString();
+        if(topic === '/devices/rollet/update') {
+            // put here a method to read message 
+        }
     });
 
     this.mqttClient.on('close', () => {
@@ -43,6 +50,7 @@ class MqttHandler {
     this.mqttClient.publish(topic, message);
   }
 
+  
 
 }
 
