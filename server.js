@@ -8,7 +8,8 @@ var bodyParser = require("body-parser");
 // -------------------------------------------------
 // Import ...
 //
-var mqttHandler = require('./api/handlers/MqttHandler');
+const db = require('./api/config/db.config');
+var mqttHandler = require('./api/handlers/mqtt.handler');
 // -------------------------------------------------
 
 var app = express();
@@ -21,10 +22,15 @@ var mqttClient = new mqttHandler();
     mqttClient.connect();
     
 
+// force: true will drop the table if it already exists
+// db.sequelize.sync({force: true}).then(() => {
+//     console.log('Drop and Resync with { force: true }');
+//   });
 // -------------------------------------------------
 // Import routes.
 //
-var rollets = require('./api/routes/RolletRoutes');
+require('./api/routes/area.route')(app);
+var rollets = require('./api/routes/rollet.route');
 
 // Registering routes.
 rollets(app, mqttClient); 
