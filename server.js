@@ -29,6 +29,7 @@ var mqttClient = new mqttHandler();
 // -------------------------------------------------
 // Import routes.
 //
+require('./api/routes/device.route')(app);
 require('./api/routes/user.route')(app);
 require('./api/routes/area.route')(app);
 var rollets = require('./api/routes/rollet.route');

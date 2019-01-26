@@ -24,6 +24,7 @@ db.sequelize = sequelize;
 //Models/tables
 db.areas = require('../models/area.model')(sequelize, Sequelize);
 db.users = require('../models/user.model')(sequelize, Sequelize);
+db.devices = require('../models/device.model')(sequelize, Sequelize);
  
  
 module.exports = db;
