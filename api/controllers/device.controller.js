@@ -9,6 +9,7 @@ exports.create = (req, res) => {
         powerState: req.body.powerState,
         deviceActionState: req.body.deviceActionState,
         topic: req.body.topic,
+        areaId: req.body.areaId,
 	})
     .then(device => {		
         // Send created device to client
@@ -20,10 +21,11 @@ exports.create = (req, res) => {
 // Get all devices
 exports.findAll = (req, res) => {
     Device.findAll({
-        attributes: { exclude: ["createdAt", "updatedAt"] } // I m not sure if I want to remove it from req
+        attributes: { exclude: ["createdAt", "updatedAt"] }, // I m not sure if I want to remove it from req#
+        where: {areaId: req.query.areaId }
     })
     .then(devices => {
-        res.json(devices);
+        res.json({devices: devices});
     })
     .catch(error => res.status(400).send(error))
 };
@@ -57,6 +59,7 @@ exports.update = (req, res) => {
                 powerState: req.body.powerState,
                 deviceActionState: req.body.deviceActionState,
                 topic: req.body.topic,
+                areaId: req.body.areaId,
             })
             .then(() => res.status(200).json(device))
             .catch((error) => res.status(400).send(error));

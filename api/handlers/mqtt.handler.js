@@ -8,7 +8,7 @@ class MqttHandler {
     this.username = env.mqttUsername; // mqtt credentials if these are needed to connect
     this.password = env.mqttPassword;
 
-    this.retMessage = 'x';
+    this.retMessage = '?';
   }
 
 

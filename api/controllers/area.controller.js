@@ -12,6 +12,7 @@ exports.create = (req, res) => {
     .then(area => {		
         // Send created area to client
         res.json(area);
+        
     })
     .catch(error => res.status(400).send(error))
 };
@@ -22,7 +23,8 @@ exports.findAll = (req, res) => {
         attributes: { exclude: ["createdAt", "updatedAt"] } // I m not sure if I want to remove it from req
     })
     .then(areas => {
-        res.json(areas);
+        //res.json(areas);
+        res.json({ areas: areas });
     })
     .catch(error => res.status(400).send(error))
 };

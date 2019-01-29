@@ -14,7 +14,9 @@ module.exports = (sequelize, Sequelize) => {
         topic: {
             type: Sequelize.STRING
         },
-        // device id ?
+        areaId: {
+            type: Sequelize.INTEGER
+        }
 	});
 	
 	return Device;
