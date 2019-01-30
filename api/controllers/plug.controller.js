@@ -3,7 +3,7 @@
 const db = require('../config/db.config');
 const Plug = db.plugs;
 
-// Post an Area
+// Post a plug
 exports.create = (req, res) => {	
 	// Save to MariaDB database
     Plug.create({  
@@ -17,4 +17,59 @@ exports.create = (req, res) => {
         res.json(plug);
     })
     .catch(error => res.status(400).send(error))
+};
+
+// Find a Plug by Id
+exports.findById = (req, res) => {	
+    Plug.findById(req.params.plugId,
+        {attributes: { exclude: ["createdAt", "updatedAt"] }}
+    )
+    .then(plug => {
+        if (!plug){
+            return res.status(404).json({message: "Plug Not Found"})
+        }
+
+        return res.status(200).json(plug)
+    })
+    .catch(error => res.status(400).send(error));
+};
+
+// Update a plug
+exports.update = (req, res) => {
+    
+	return Plug.findById(req.params.plugId)
+		.then(plug => {
+            if(!plug){
+                return res.status(404).json({
+                    message: 'Plug Not Found',
+                });
+            }
+            return plug.update({
+                name: req.body.name,
+                powerState: req.body.powerState,
+                topic: req.body.topic,
+                areaId: req.body.areaId
+            })
+            .then(() => res.status(200).json(plug))
+            .catch((error) => res.status(400).send(error));
+        })
+		.catch((error) => res.status(400).send(error));			 
+};
+
+// Delete a plug by Id
+exports.delete = (req, res) => {
+	return Plug
+        .findById(req.params.plugId)
+        .then(plug => {
+            if(!plug) {
+                return res.status(400).send({
+                    message: 'Plug Not Found',
+                });
+            }
+ 
+            return plug.destroy()
+            .then(() => res.status(200).json({message: "Plug removed successfully!"}))
+            .catch(error => res.status(400).send(error));
+        })
+        .catch(error => res.status(400).send(error));
 };

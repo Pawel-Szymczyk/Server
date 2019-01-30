@@ -2,21 +2,23 @@
 
 module.exports = function (app, mqtt) {
   
-    // get rollet controller (db) 
+    // get plug controller (db) 
     var plug = require('../controllers/plug.controller');
 
-    // Create a new rollet
+    // Create a new plug
     app.post('/api/v1/devices/plug/create', plug.create);
     
-    // // Get specific rollet
-    // app.get('/api/v1/devices/rollet/:rolletId', rollet.findById);
+    // Get specific plug
+    app.get('/api/v1/devices/plug/:plugId', plug.findById);
     
-    // // Update specific rollet
-    // app.put('/api/v1/devices/rollet/:rolletId', rollet.update);
+    // Update specific plug
+    app.put('/api/v1/devices/plug/:plugId', plug.update);
     
-    // // Delete specific rollet 
-    // app.delete('/api/v1/devices/rollet/delete/:rolletId', rollet.delete);
+    // Delete specific plug 
+    app.delete('/api/v1/devices/plug/delete/:plugId', plug.delete);
  
+
+    // TODO: rewrite url
     app.route('/api/v1/devices/desklight')
         .post(
             function(req, res) {

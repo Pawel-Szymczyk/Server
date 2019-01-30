@@ -3,7 +3,7 @@
 const db = require('../config/db.config');
 const Rollet = db.rollets;
 
-// Post an Area
+// Post a rollet
 exports.create = (req, res) => {	
 	// Save to MariaDB database
     Rollet.create({  
