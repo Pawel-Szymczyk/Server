@@ -2,9 +2,22 @@
 
 module.exports = function (app, mqtt) {
   
-    // get controller (db) here
+    // get rollet controller (db) 
     var rollet = require('../controllers/rollet.controller');
- 
+
+    // Create a new rollet
+    app.post('/api/v1/devices/rollet/create', rollet.create);
+    
+    // Get specific rollet
+    app.get('/api/v1/devices/rollet/:rolletId', rollet.findById);
+    
+    // Update specific rollet
+    app.put('/api/v1/devices/rollet/:rolletId', rollet.update);
+    
+    // Delete specific rollet 
+    app.delete('/api/v1/devices/rollet/delete/:rolletId', rollet.delete);
+
+    // MQTT rollet controll
     app.route('/api/v1/devices/rollet')
         .post(
             
@@ -14,8 +27,6 @@ module.exports = function (app, mqtt) {
                     state: req.body.state,
                     action: req.body.action
                 };
-
-                
 
                 mqtt.sendMessage('/devices/rollet/update', JSON.stringify(object));
                 let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
@@ -28,11 +39,7 @@ module.exports = function (app, mqtt) {
                 // } else {
                 //     res.status(200).send(object);
                 // }
-
-                
-                
             }
-            
         );
     
 

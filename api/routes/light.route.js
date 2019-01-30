@@ -7,14 +7,11 @@ module.exports = function (app, mqtt) {
  
     app.route('/api/v1/devices/desklight')
         .post(
-            
             function(req, res) {
                 
                 var object = {
                     state: req.body.state
                 };
-
-                
 
                 mqtt.sendMessage('/devices/light', JSON.stringify(object));
                 //let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
@@ -27,11 +24,7 @@ module.exports = function (app, mqtt) {
                 // } else {
                 //     res.status(200).send(object);
                 // }
-
-                
-                
             }
-            
         );
     
 

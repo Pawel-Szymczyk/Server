@@ -7,33 +7,33 @@ const Plug = db.plugs;
 // Post a Device
 exports.create = (req, res) => {	
     // Save to MariaDB database
-    let deviceType = req.params.deviceType;
+    // let deviceType = req.params.deviceType;
 
-    switch (deviceType) {
-        case "rollet":
-            createRolletDevice(req, res);
-            break;
-        case "plug":
-            createPlugDevice(req, res);
-            break;
-        case "temp":
-            createTemperatureDevice(req, res);
-            break;
-        case "light":
-            createLightDevice(req, res);
-            break;
-        case "motion":
-            createMotionDevice(req, res);
-            break;
-        case "camera":
-            createCameraDevice(req, res);
-            break;
-        case "rgb":
-            createRGBDevice(req, res);
-            break;
-        default:
-            break;
-    }
+    // switch (deviceType) {
+    //     case "rollet":
+    //         createRolletDevice(req, res);
+    //         break;
+    //     case "plug":
+    //         createPlugDevice(req, res);
+    //         break;
+    //     case "temp":
+    //         createTemperatureDevice(req, res);
+    //         break;
+    //     case "light":
+    //         createLightDevice(req, res);
+    //         break;
+    //     case "motion":
+    //         createMotionDevice(req, res);
+    //         break;
+    //     case "camera":
+    //         createCameraDevice(req, res);
+    //         break;
+    //     case "rgb":
+    //         createRGBDevice(req, res);
+    //         break;
+    //     default:
+    //         break;
+    // }
 };
 
 function createRolletDevice(req, res) {
@@ -188,7 +188,7 @@ function createRGBDevice(req, res) {
 // 		.catch((error) => res.status(400).send(error));			 
 // };
 
-// // Delete a device by Id
+// Delete a device by Id
 // exports.delete = (req, res) => {
 // 	return Device
 //         .findById(req.params.deviceId)
@@ -205,3 +205,69 @@ function createRGBDevice(req, res) {
 //         })
 //         .catch(error => res.status(400).send(error));
 // };
+
+exports.delete = (req, res) => {
+
+    // let deviceType = req.params.deviceType;
+    // switch (deviceType) {
+    //     case "rollet":
+    //         deleteRolletDevice(req, res);
+    //         break;
+    //     case "plug":
+    //         deletePlugDevice(req, res);
+    //         break;
+    //     case "temp":
+            
+    //         break;
+    //     case "light":
+            
+    //         break;
+    //     case "motion":
+            
+    //         break;
+    //     case "camera":
+            
+    //         break;
+    //     case "rgb":
+            
+    //         break;
+    //     default:
+    //         break;
+    // }
+};
+
+function deleteRolletDevice(req, res) {
+    return Rollet
+        .findById(req.params.deviceId)
+        .then(rollet => {
+            if(!rollet) {
+                return res.status(400).send({
+                    message: 'Rollet Not Found',
+                });
+            }
+
+            return rollet.destroy()
+            .then(() => res.status(200).json({message: "Rollet removed successfully!"}))
+            .catch(error => res.status(400).send(error));
+        })
+        .catch(error => res.status(400).send(error));
+}
+
+function deletePlugDevice(req, res) {
+    return Plug
+        .findById(req.params.deviceId)
+        .then(plug => {
+            if(!plug) {
+                return res.status(400).send({
+                    message: 'Plug Not Found',
+                });
+            }
+
+            return plug.destroy()
+            .then(() => res.status(200).json({message: "Plug removed successfully!"}))
+            .catch(error => res.status(400).send(error));
+        })
+        .catch(error => res.status(400).send(error));
+}
+
+
