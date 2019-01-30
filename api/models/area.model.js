@@ -2,9 +2,10 @@
 
 module.exports = (sequelize, Sequelize) => {
 	const Area = sequelize.define('area', {
-        // id: {
-        //     type: Sequelize.INTEGER
-        // },
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+        },
         name: {
             type: Sequelize.STRING
         },

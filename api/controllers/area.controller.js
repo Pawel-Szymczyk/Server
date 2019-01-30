@@ -18,20 +18,91 @@ exports.create = (req, res) => {
 };
 
 // Get all areas
+// exports.findAll = (req, res) => {
+//     Area.findAll({
+//         attributes: { exclude: ["createdAt", "updatedAt"] } // I m not sure if I want to remove it from req
+//     })
+//     .then(areas => {
+//         //res.json(areas);
+//         res.json({ areas: areas });
+//     })
+//     .catch(error => res.status(400).send(error))
+// };
+
 exports.findAll = (req, res) => {
     Area.findAll({
+        include: [
+            {
+                model: db.rollets
+            },
+            {
+                model: db.plugs
+            }
+        ],
         attributes: { exclude: ["createdAt", "updatedAt"] } // I m not sure if I want to remove it from req
     })
     .then(areas => {
-        //res.json(areas);
-        res.json({ areas: areas });
+        const resObj = areas.map(area => {
+
+            return Object.assign(
+                {
+                    areaId: area.id,
+                    name: area.name,
+                    areaState: area.areaState,
+                    owner: area.owner,
+                    // TODO: Would be good to have if statement and filted data depends on areaState...
+                    devices: [
+                        {
+                            rollets: area.rollets.map(rollet => {
+
+                                return Object.assign(
+                                    {
+                                        name: rollet.name,
+                                        powerState: rollet.powerState,
+                                        actionState: rollet.actionState,
+                                        topic: rollet.topic,
+                                        areaId: rollet.areaId
+                                    }
+                                )
+                            })
+                        },
+                        {
+                            plugs: area.plugs.map(plug => {
+        
+                                return Object.assign(
+                                    {
+                                        name: plug.name,
+                                        powerState: plug.powerState,
+                                        topic: plug.topic,
+                                        areaId: plug.areaId
+                                    }
+                                )
+                            }),
+                        }
+                    ]
+                }
+            )
+        })
+        res.json({areas: resObj})
     })
     .catch(error => res.status(400).send(error))
 };
 
 // Find a Area by Id
 exports.findById = (req, res) => {	
-	Area.findById(req.params.areaId,
+    Area.findById(req.params.areaId,
+        {
+            include: [
+                {
+                    model: db.rollets,
+                    required: false,
+                },
+                {
+                    model: db.plugs,
+                    required: false,
+                }
+            ],
+        },
         {attributes: { exclude: ["createdAt", "updatedAt"] }}
     )
     .then(area => {
@@ -46,6 +117,7 @@ exports.findById = (req, res) => {
 
 // Update an Area
 exports.update = (req, res) => {
+    
 	return Area.findById(req.params.areaId)
 		.then(area => {
             if(!area){

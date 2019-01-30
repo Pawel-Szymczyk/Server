@@ -1,14 +1,12 @@
 'use strict';
 
 module.exports = (sequelize, Sequelize) => {
-	const Rollet = sequelize.define('rollet', {
+	const Plug = sequelize.define('plug', {
+
         name: {
             type: Sequelize.STRING
         },
         powerState: {
-            type: Sequelize.STRING
-        },
-        actionState: {
             type: Sequelize.STRING
         },
         topic: {
@@ -19,5 +17,5 @@ module.exports = (sequelize, Sequelize) => {
         }
 	});
 	
-	return Rollet;
+	return Plug;
 }
