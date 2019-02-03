@@ -8,6 +8,7 @@ exports.create = (req, res) => {
 	// Save to MariaDB database
     Plug.create({  
         name: req.body.name,
+        type: req.body.type,
         powerState: req.body.powerState,
         topic: req.body.topic,
         areaId: req.body.areaId
@@ -46,12 +47,37 @@ exports.update = (req, res) => {
             }
             return plug.update({
                 name: req.body.name,
+                type: req.body.type,
                 powerState: req.body.powerState,
                 topic: req.body.topic,
                 areaId: req.body.areaId
             })
             .then(() => res.status(200).json(plug))
             .catch((error) => res.status(400).send(error));
+        })
+		.catch((error) => res.status(400).send(error));			 
+};
+
+// Update a plug base on mqtt state
+exports.updateMqtt = (object) => {
+
+
+	return Plug.findById(object.plugId)
+		.then(plug => {
+            if(!plug){
+                return res.status(404).json({
+                    message: 'Plug Not Found',
+                });
+            }
+            return plug.update({
+                name: object.name,
+                type: object.type,
+                powerState: object.powerState,
+                topic: object.topic,
+                areaId: object.areaId
+            })
+            // .then(() => res.status(200).json(plug))
+            // .catch((error) => res.status(400).send(error));
         })
 		.catch((error) => res.status(400).send(error));			 
 };

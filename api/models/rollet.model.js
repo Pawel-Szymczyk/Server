@@ -5,6 +5,9 @@ module.exports = (sequelize, Sequelize) => {
         name: {
             type: Sequelize.STRING
         },
+        type: {
+            type: Sequelize.STRING
+        },
         powerState: {
             type: Sequelize.STRING
         },

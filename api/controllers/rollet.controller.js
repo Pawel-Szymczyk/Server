@@ -8,6 +8,7 @@ exports.create = (req, res) => {
 	// Save to MariaDB database
     Rollet.create({  
         name: req.body.name,
+        type: req.body.type,
         powerState: req.body.powerState,
         actionState: req.body.actionState,
         topic: req.body.topic,
@@ -47,6 +48,7 @@ exports.update = (req, res) => {
             }
             return rollet.update({
                 name: req.body.name,
+                type: req.body.type,
                 powerState: req.body.powerState,
                 actionState: req.body.actionState,
                 topic: req.body.topic,

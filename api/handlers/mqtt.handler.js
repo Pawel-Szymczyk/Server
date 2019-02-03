@@ -32,7 +32,7 @@ class MqttHandler {
     // mqtt subscriptions
     this.mqttClient.subscribe('/devices/rollet/update', {qos: 1});
     this.mqttClient.subscribe('/devices/rgb', {qos: 1});
-    this.mqttClient.subscribe('/devices/light', {qos: 1});
+    this.mqttClient.subscribe('/devices/plug/update', {qos: 1});
 
     // When a message arrives, console.log it
     // this.mqttClient.on('message', function (topic, message) {

@@ -58,6 +58,7 @@ exports.findAll = (req, res) => {
                                 return Object.assign(
                                     {
                                         name: rollet.name,
+                                        type: rollet.type,
                                         powerState: rollet.powerState,
                                         actionState: rollet.actionState,
                                         topic: rollet.topic,
@@ -72,6 +73,7 @@ exports.findAll = (req, res) => {
                                 return Object.assign(
                                     {
                                         name: plug.name,
+                                        type: plug.type,
                                         powerState: plug.powerState,
                                         topic: plug.topic,
                                         areaId: plug.areaId
@@ -110,7 +112,7 @@ exports.findById = (req, res) => {
             return res.status(404).json({message: "Area Not Found"})
         }
 
-        return res.status(200).json(area)
+        return res.status(200).json({area: area})
     })
     .catch(error => res.status(400).send(error));
 };
