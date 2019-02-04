@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
         powerState: {
             type: Sequelize.STRING
         },
+        serialNumber: {
+            type: Sequelize.STRING
+        },
         topic: {
             type: Sequelize.STRING
         },

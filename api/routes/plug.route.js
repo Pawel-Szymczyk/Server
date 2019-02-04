@@ -12,39 +12,44 @@ module.exports = function (app, mqtt) {
     app.get('/api/v1/devices/plug/:plugId', plug.findById);
     
     // Update specific plug
-    app.put('/api/v1/devices/plug/:plugId', plug.update);
+    //app.put('/api/v1/devices/plug/:plugId', plug.update);
     
     // Delete specific plug 
     app.delete('/api/v1/devices/plug/delete/:plugId', plug.delete);
  
-
-    // TODO: rewrite url
+    // TODO: rewrite url (add a device serial number)
     app.route('/api/v1/devices/plug')
-        .post(
+        .put(
             function(req, res) {
+
+                // convert input boolean to string state
+                var convertedState = plug.convertBoolInputToStringOutput(req.body.powerState);
+                
                 
                 var object = {
-                    state: req.body.state
+                    //state: req.body.powerState
+                    state: convertedState
                 };
 
                 var dbObject = {
                     plugId: req.body.plugId,
-                    state: req.body.state,
                     name: req.body.name,
                     type: req.body.type,
-                    powerState:  req.body.state,
+                    // powerState: req.body.powerState,
+                    powerState: convertedState,
+                    serialNumber: req.body.serialNumber,
                     topic: req.body.topic,
                     areaId: req.body.areaId
                 }
 
-
+                // update a device
                 mqtt.sendMessage('/devices/plug/update', JSON.stringify(object));
                 //let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
 
+                // update a database
                 plug.updateMqtt(dbObject);
 
                 // rollet.changeRolletPosition(); // update db here ?
-                console.log("sdsad");
 
                 res.status(200).send(object);
                 // if(message !== 'x'){
