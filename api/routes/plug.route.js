@@ -27,7 +27,6 @@ module.exports = function (app, mqtt) {
                 
                 
                 var object = {
-                    //state: req.body.powerState
                     state: convertedState
                 };
 
@@ -35,7 +34,6 @@ module.exports = function (app, mqtt) {
                     plugId: req.body.plugId,
                     name: req.body.name,
                     type: req.body.type,
-                    // powerState: req.body.powerState,
                     powerState: convertedState,
                     serialNumber: req.body.serialNumber,
                     topic: req.body.topic,
@@ -51,7 +49,7 @@ module.exports = function (app, mqtt) {
 
                 // rollet.changeRolletPosition(); // update db here ?
 
-                res.status(200).send(object);
+                res.status(200).send({state: plug.convertStringInputToBooleanOutput(convertedState)});
                 // if(message !== 'x'){
                 //     res.status(200).send(JSON.parse(message));
                 // } else {

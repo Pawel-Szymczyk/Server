@@ -27,7 +27,7 @@ exports.create = (req, res) => {
 // Find a Plug by Id
 exports.findById = (req, res) => {	
     Plug.findById(req.params.plugId,
-        {attributes: { exclude: ["createdAt", "updatedAt"] }}
+       // {attributes: { exclude: ["createdAt", "updatedAt"] }}
     )
     .then(plug => {
         if (!plug) {
@@ -38,9 +38,11 @@ exports.findById = (req, res) => {
             id: plug.id,
             name: plug.name,
             type: plug.type,
-            powerState: convertStringInputToBooleanOutput(plug.powerState),
+            powerState: this.convertStringInputToBooleanOutput(plug.powerState),
             serialNumber: plug.serialNumber,
             topic: plug.topic,
+            createdAt: plug.createdAt,
+            updatedAt: plug.updatedAt,
             areaId: plug.areaId
         }
 
@@ -129,7 +131,7 @@ exports.convertBoolInputToStringOutput = (boolInput) => {
     return convertedState;
 }
 
-function convertStringInputToBooleanOutput(stringInput) {
+exports.convertStringInputToBooleanOutput = (stringInput) => {
     var convertedState;
     if(stringInput == "on") {
         convertedState = true;
@@ -138,4 +140,28 @@ function convertStringInputToBooleanOutput(stringInput) {
     }
  
     return convertedState;
+}
+
+function latestWorkingTime() {
+    
+    // return Plug.findById(object.plugId)
+	// 	.then(plug => {
+    //         if(!plug){
+    //             return res.status(404).json({
+    //                 message: 'Plug Not Found',
+    //             });
+    //         }
+    //         return plug.update({
+    //             name: object.name,
+    //             type: object.type,
+    //             powerState: object.powerState,
+    //             serialNumber: object.serialNumber,
+    //             topic: object.topic,
+    //             areaId: object.areaId
+    //         })
+    //         // .then(() => res.status(200).json(plug))
+    //         // .catch((error) => res.status(400).send(error));
+    //     })
+	// 	.catch((error) => res.status(400).send(error));			 
+
 }

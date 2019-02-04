@@ -18,6 +18,12 @@ module.exports = (sequelize, Sequelize) => {
         topic: {
             type: Sequelize.STRING
         },
+        createdAt: {
+            type: Sequelize.DATE
+        },
+        updatedAt: {
+            type: Sequelize.DATE
+        },
         areaId: {
             type: Sequelize.INTEGER
         }
