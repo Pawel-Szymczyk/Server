@@ -10,10 +10,7 @@ module.exports = function (app, mqtt) {
     
     // Get specific plug
     app.get('/api/v1/devices/plug/:plugId', plug.findById);
-    
-    // Update specific plug
-    //app.put('/api/v1/devices/plug/:plugId', plug.update);
-    
+        
     // Delete specific plug 
     app.delete('/api/v1/devices/plug/delete/:plugId', plug.delete);
  
@@ -24,7 +21,6 @@ module.exports = function (app, mqtt) {
 
                 // convert input boolean to string state
                 var convertedState = plug.convertBoolInputToStringOutput(req.body.powerState);
-                
                 
                 var object = {
                     state: convertedState

@@ -24,6 +24,12 @@ module.exports = (sequelize, Sequelize) => {
         updatedAt: {
             type: Sequelize.DATE
         },
+        timeStart: {
+            type: Sequelize.TIME
+        },
+        timeStop: {
+            type: Sequelize.TIME
+        },
         areaId: {
             type: Sequelize.INTEGER
         }

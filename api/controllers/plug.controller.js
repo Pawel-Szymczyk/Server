@@ -24,6 +24,9 @@ exports.create = (req, res) => {
     .catch(error => res.status(400).send(error))
 };
 
+
+
+
 // Find a Plug by Id
 exports.findById = (req, res) => {	
     Plug.findById(req.params.plugId,
@@ -34,15 +37,27 @@ exports.findById = (req, res) => {
             return res.status(404).json({message: "Plug Not Found"})
         }
 
+        var state = this.convertStringInputToBooleanOutput(plug.powerState);
+        // getTurnOnPlugTime(plug.timeStart, plug.timeStop);
+
+        // getTurnOnPlugTime(plug.id, plug.timeStart, state);
+
+        // if(state == false) {
+        //     console.log( plug.timeStop );
+        // }
+
+
         var object = {
             id: plug.id,
             name: plug.name,
             type: plug.type,
-            powerState: this.convertStringInputToBooleanOutput(plug.powerState),
+            powerState: state,
             serialNumber: plug.serialNumber,
             topic: plug.topic,
             createdAt: plug.createdAt,
             updatedAt: plug.updatedAt,
+            timeStart: plug.timeStart,
+            lastTime: getTurnOnPlugTime(plug.id, plug.timeStart, state),
             areaId: plug.areaId
         }
 
@@ -51,32 +66,55 @@ exports.findById = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
-// Update a plug
-// exports.update = (req, res) => {
+
+function getTurnOnPlugTime(id, start, state) {
     
-// 	return Plug.findById(req.params.plugId)
-// 		.then(plug => {
-//             if(!plug){
-//                 return res.status(404).json({
-//                     message: 'Plug Not Found',
-//                 });
-//             }
-//             return plug.update({
-//                 name: req.body.name,
-//                 type: req.body.type,
-//                 powerState: req.body.powerState,
-//                 serialNumber: req.body.serialNumber,
-//                 topic: req.body.topic,
-//                 areaId: req.body.areaId
-//             })
-//             .then(() => res.status(200).json(plug))
-//             .catch((error) => res.status(400).send(error));
-//         })
-// 		.catch((error) => res.status(400).send(error));			 
-// };
+    var time;
+
+     if( state == true) {
+        var stop = new Date();
+
+        var res = Math.abs(start - stop) / 1000;
+
+
+        // get hours        
+        var hours = Math.floor(res / 3600) % 24;        
+    // console.log("Difference (Hours): "+hours);  
+
+        // get minutes
+        var minutes = Math.floor(res / 60) % 60;
+    // console.log("Difference (Minutes): "+minutes);  
+
+        // get seconds
+        var seconds = res % 60;
+    // console.log("Difference (Seconds): "+seconds);  
+
+        console.log(hours + ':' + minutes + ':' + seconds);
+        
+        
+        
+        time = hours + ':' + minutes + ':' + seconds;
+
+
+    }
+
+    return time;
+    
+
+}
+
+
+
 
 // Update a plug base on mqtt state
 exports.updateMqtt = (object) => {
+
+
+    var tStart;
+
+    if(object.powerState == "on") {
+        tStart = new Date();
+    } 
 
 
 	return Plug.findById(object.plugId)
@@ -92,6 +130,8 @@ exports.updateMqtt = (object) => {
                 powerState: object.powerState,
                 serialNumber: object.serialNumber,
                 topic: object.topic,
+                //lastOnTime: date.getSeconds(), // to change
+                timeStart: tStart,
                 areaId: object.areaId
             })
             // .then(() => res.status(200).json(plug))
@@ -140,28 +180,4 @@ exports.convertStringInputToBooleanOutput = (stringInput) => {
     }
  
     return convertedState;
-}
-
-function latestWorkingTime() {
-    
-    // return Plug.findById(object.plugId)
-	// 	.then(plug => {
-    //         if(!plug){
-    //             return res.status(404).json({
-    //                 message: 'Plug Not Found',
-    //             });
-    //         }
-    //         return plug.update({
-    //             name: object.name,
-    //             type: object.type,
-    //             powerState: object.powerState,
-    //             serialNumber: object.serialNumber,
-    //             topic: object.topic,
-    //             areaId: object.areaId
-    //         })
-    //         // .then(() => res.status(200).json(plug))
-    //         // .catch((error) => res.status(400).send(error));
-    //     })
-	// 	.catch((error) => res.status(400).send(error));			 
-
 }
