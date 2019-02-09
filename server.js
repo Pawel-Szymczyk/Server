@@ -1,8 +1,8 @@
 // -------------------------------------------------
 // Import libraries.
 //
-var express = require('express');
-var bodyParser = require("body-parser");
+const express = require('express');
+const bodyParser = require("body-parser");
 // -------------------------------------------------
 
 // -------------------------------------------------
@@ -17,15 +17,14 @@ var app = express();
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
-
 var mqttClient = new mqttHandler();
     mqttClient.connect();
     
 
 // force: true will drop the table if it already exists
-db.sequelize.sync({force: true}).then(() => {
-    console.log('Drop and Resync with { force: true }');
-  });
+// db.sequelize.sync({force: true}).then(() => {
+//     console.log('Drop and Resync with { force: true }');
+//   });
 
 // -------------------------------------------------
 // Import routes.
