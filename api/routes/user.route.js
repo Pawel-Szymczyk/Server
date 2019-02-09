@@ -3,14 +3,17 @@
 module.exports = function(app) {
     const users = require('../controllers/user.controller');
 
-    // Create a new area
-    app.post('/api/v1/users/create', users.create);
+    // User registration...
+    app.post('/api/v1/users/registration', users.registration);
+
+    // User login...
+    //app.post('api/v1/users/login', user.login);
 
     // Get all areas
     // Note: propably it will not be used at all
-    app.get('/api/v1/users', users.findAll);
+    //app.get('/api/v1/users', users.findAll);
 
-    // Get specific user
+    // Get specific user 
     app.get('/api/v1/users/:userId', users.findById);
 
     // Update specific user

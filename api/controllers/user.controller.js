@@ -2,16 +2,17 @@ const db = require('../config/db.config');
 const User = db.users;
 
 // Post an User
-exports.create = (req, res) => {	
+exports.registration = (req, res) => {	
     // Save to MariaDB database
     
     // Note: This MUST be rewritten to make it as secure as possible 
 	User.create({  
-        name: req.body.name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         username: req.body.username,
         password: req.body.password,
-        authenticationKey: req.body.authenticationKey,
+        //authenticationKey: req.body.authenticationKey,
 	})
     .then(user => {		
         // Send created area to client
