@@ -10,7 +10,7 @@ module.exports = function(app) {
     app.post('/api/v1/users/registration', inputValidationHandler.validateRegistrationInput, users.registration);
 
     // User login...
-    app.post('/api/v1/users/login', validation.validateAuthorizationToken, users.login);
+    app.post('/api/v1/users/login', inputValidationHandler.validateLoginInput, validation.validateAuthorizationToken, users.login);
 
 
     //app.post('/api/v1/users/test', validation.validateAuthenticationToken, users.test);
