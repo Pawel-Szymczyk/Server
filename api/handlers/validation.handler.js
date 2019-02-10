@@ -1,6 +1,5 @@
 const { check } = require('express-validator/check');
 
-
 const db = require('../config/db.config');
 const UserDB = db.users;
  
@@ -55,4 +54,5 @@ module.exports = {
     ],
 
 
-}
+};
+

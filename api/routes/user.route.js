@@ -1,9 +1,7 @@
 'use strict';
 
-
-
 const inputValidationHandler = require('../handlers/validation.handler');
-
+const validation = require('../handlers/tokens.handler');
 
 module.exports = function(app) {
     const users = require('../controllers/user.controller');
@@ -12,7 +10,10 @@ module.exports = function(app) {
     app.post('/api/v1/users/registration', inputValidationHandler.validateRegistrationInput, users.registration);
 
     // User login...
-    app.post('/api/v1/users/login', users.login);
+    app.post('/api/v1/users/login', validation.validateAuthorizationToken, users.login);
+
+
+    //app.post('/api/v1/users/test', validation.validateAuthenticationToken, users.test);
  
     // Get all areas
     // Note: propably it will not be used at all

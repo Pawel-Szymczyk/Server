@@ -3,7 +3,6 @@
 //
 const express = require('express');
 const bodyParser = require("body-parser");
-const passport = require('passport');
 // -------------------------------------------------
 
 // -------------------------------------------------
@@ -18,9 +17,6 @@ var app = express();
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-
-    // app.use(passport.initialize());
-    // app.use(passport.session());
 
 var mqttClient = new mqttHandler();
     mqttClient.connect();

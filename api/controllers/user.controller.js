@@ -2,10 +2,28 @@
 const { validationResult } = require('express-validator/check');
 const errorHandler = require('../handlers/error.handler');
 const bcrypt = require('bcryptjs');
-const passport = require('passport');
+const validation = require('../handlers/tokens.handler');
+
+
 
 const db = require('../config/db.config');
 const UserDB = db.users;
+
+
+
+// exports.test = (req, res) => {
+
+//   //console.log(validation.generateAuthenticationToken());
+
+//   res.json({'m': 'you are log in and can make some work'});
+
+// }
+
+
+
+
+
+
 
 // Post an User
 exports.registration = (req, res) => {	
@@ -20,6 +38,18 @@ exports.registration = (req, res) => {
             password: req.body.password
         })
 
+        // -------------------------------------------------------------------
+        // Create authorization Token.
+        //
+        let authorizationData = {
+            'form': 'mobileapp',
+            'username': req.body.username,
+            'userType': 'user',
+            'isValid': 'true'
+        }
+        let token = validation.generateAuthorizationToken(authorizationData);
+        // -------------------------------------------------------------------
+
         // Encrypt password and add user to db.
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(hashedPassword.password, salt, function(err, hash) {
@@ -28,14 +58,14 @@ exports.registration = (req, res) => {
                 }
 
                 hashedPassword.password = hash;
-                // TODO: create authorization key here and save to db and return with successful message
 
                 UserDB.create({  
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     email: req.body.email,
                     username: req.body.username,
-                    password: hashedPassword.password
+                    password: hashedPassword.password,
+                    authorizationToken: token
                 })
                 .then(user => {		
 
@@ -44,9 +74,9 @@ exports.registration = (req, res) => {
                         state: 'success',
                         userId: user.id,
                         message: 'You are now registered and can log in',
-                        authenticationToken: ''
+                        authorizationToken: user.authorizationToken,
                     });
-                    res.json(message); // change message with authorization key
+                    res.json(message);
 
                 })
                 .catch(error => res.status(400).send(error))
@@ -58,31 +88,51 @@ exports.registration = (req, res) => {
 
 
 exports.login = (req, res) => {	
+    //
+    // Authorization Token further validation.
+    // Go to tokens.handler.js 
+    //
+    if(req.data !== null) {
 
-    UserDB.findOne(
-        { 
-            where: { username: req.body.username, }
-        }
-    )
-    .then(user => {
-        if (!user){
-            return res.status(404).json({message: "User Not Found"})
-        }
-
-        // TODO: authorization/ and authentication missing..
-
-
-        bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
-            //if(err) throw err;
-            if(isMatch) {
-                return res.status(200).json(user)
-            } else {
-                return res.status(404).json({message: 'Wrong password'})
+        // Find user by its unique username
+        UserDB.findOne(
+            { 
+                where: { username: req.body.username, }
             }
-        })
+        )
+        .then(user => {
+            if (!user){
+                return res.status(404).json({message: "User Not Found"})
+            }
 
-    })
-    .catch(error => res.status(400).send(error));
+            bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
+                //if(err) throw err;
+                if(isMatch) {
+
+                    // Get authentication token...
+                    let authenticationKey = validation.generateAuthenticationToken();
+
+                    let userLog = {
+                        id: user.id,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email,
+                        username: user.username,
+                        authenticationToken: authenticationKey
+                    }
+
+                    return res.status(200).json(userLog)
+                } else {
+                    return res.status(404).json({message: 'Wrong password'})
+                }
+            })
+
+        })
+        .catch(error => res.status(400).send(error));
+
+    } else {
+        return res.status(405).json({message: 'Your authorization Token is invalid'});
+    }
     
 };
 
