@@ -12,7 +12,7 @@ module.exports = function(app) {
     app.post('/api/v1/users/registration', inputValidationHandler.validateRegistrationInput, users.registration);
 
 
-    app.post('/validateMe', inputValidationHandler.validateMeChecks, users.test);
+    //app.post('/validateMe', inputValidationHandler.validateMeChecks, users.test);
 
 
 
