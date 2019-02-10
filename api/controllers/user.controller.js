@@ -4,8 +4,6 @@ const errorHandler = require('../handlers/error.handler');
 const bcrypt = require('bcryptjs');
 const validation = require('../handlers/tokens.handler');
 
-
-
 const db = require('../config/db.config');
 const UserDB = db.users;
 
@@ -21,11 +19,7 @@ const UserDB = db.users;
 
 
 
-
-
-
-
-// Post an User
+// Register a new user to the system.
 exports.registration = (req, res) => {	
 
     var errors = validationResult(req).formatWith(errorHandler.errorFormatter);
@@ -88,13 +82,15 @@ exports.registration = (req, res) => {
 
 
 exports.login = (req, res) => {	
-    //
+    // --------------------------------------------------------------------------
     // Authorization Token further validation.
     // Go to tokens.handler.js 
     //
     if(req.data !== null) {
 
+        // --------------------------------------------------------------------------
         // Find user by its unique username
+        //
         UserDB.findOne(
             { 
                 where: { username: req.body.username, }
@@ -129,11 +125,12 @@ exports.login = (req, res) => {
 
         })
         .catch(error => res.status(400).send(error));
+        // --------------------------------------------------------------------------
 
     } else {
         return res.status(405).json({message: 'Your authorization Token is invalid'});
     }
-    
+    // --------------------------------------------------------------------------
 };
 
 

@@ -1,9 +1,24 @@
 const { check } = require('express-validator/check');
+const { filter } = require('express-validator/filter');
 
 const db = require('../config/db.config');
 const UserDB = db.users;
  
 module.exports = {
+
+    validateLoginInput: [
+        check('username')
+            .isLength({ min:1 }).withMessage('Username is required.')
+            .trim() // trims characters (whitespace by default) at the beginning and at the end of a string
+            .stripLow() // remove ASCII control characters, which are normally invisible
+            .escape(),  // replaces <, >, &, ', " and / with their corresponding HTML entities
+
+        check('password')
+            .isLength({ min:1 }).withMessage('Password is required.')
+            .trim()
+            .escape()
+            .stripLow()
+    ],
 
     validateRegistrationInput: [
         check('firstName')
@@ -18,6 +33,7 @@ module.exports = {
         check('email')
             .isEmail().withMessage('Email is not valid.')
             .isLength({ min:1 }).withMessage('Email name is a required.')
+            .normalizeEmail()   // canonicalizes an email address.
             .custom(value => {
                 return UserDB.findOne({ where: { email: value, }})
                 .then(user => {
