@@ -2,6 +2,7 @@
 const { validationResult } = require('express-validator/check');
 const errorHandler = require('../handlers/error.handler');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 const db = require('../config/db.config');
 const UserDB = db.users;
@@ -55,19 +56,36 @@ exports.registration = (req, res) => {
     }
 };
 
-// exports.test = (req, res) => {
 
+exports.login = (req, res) => {	
+
+    UserDB.findOne(
+        { 
+            where: { username: req.body.username, }
+        }
+    )
+    .then(user => {
+        if (!user){
+            return res.status(404).json({message: "User Not Found"})
+        }
+
+        // TODO: authorization/ and authentication missing..
+
+
+        bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
+            //if(err) throw err;
+            if(isMatch) {
+                return res.status(200).json(user)
+            } else {
+                return res.status(404).json({message: 'Wrong password'})
+            }
+        })
+
+    })
+    .catch(error => res.status(400).send(error));
     
-//     var errors = validationResult(req).formatWith(errorHandler.errorFormatter);
+};
 
-//     if (!errors.isEmpty()) {
-//         res.status(400).json(errors.array());
-//     } else {
-//         console.log(req.body.username);
-//         res.sendStatus(200);
-//     }
-
-// };
 
 // Get all areas
 exports.findAll = (req, res) => {

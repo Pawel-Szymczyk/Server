@@ -11,13 +11,8 @@ module.exports = function(app) {
     // User registration...
     app.post('/api/v1/users/registration', inputValidationHandler.validateRegistrationInput, users.registration);
 
-
-    //app.post('/validateMe', inputValidationHandler.validateMeChecks, users.test);
-
-
-
     // User login...
-    //app.post('api/v1/users/login', user.login);
+    app.post('/api/v1/users/login', users.login);
  
     // Get all areas
     // Note: propably it will not be used at all
