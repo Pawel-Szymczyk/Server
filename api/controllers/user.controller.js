@@ -7,18 +7,6 @@ const validation = require('../handlers/tokens.handler');
 const db = require('../config/db.config');
 const UserDB = db.users;
 
-
-
-// exports.test = (req, res) => {
-
-//   //console.log(validation.generateAuthenticationToken());
-
-//   res.json({'m': 'you are log in and can make some work'});
-
-// }
-
-
-
 // Register a new user to the system.
 exports.registration = (req, res) => {	
 
@@ -86,7 +74,8 @@ exports.login = (req, res) => {
     // Authorization Token further validation.
     // Go to tokens.handler.js 
     //
-    if(req.data !== null) {
+
+    if(req.data) {
 
         // --------------------------------------------------------------------------
         // Find user by its unique username
@@ -133,7 +122,7 @@ exports.login = (req, res) => {
     // --------------------------------------------------------------------------
 };
 
-
+// TODO: provide token validation
 // Get all areas
 exports.findAll = (req, res) => {
     UserDB.findAll({

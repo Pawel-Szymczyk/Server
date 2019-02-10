@@ -1,7 +1,7 @@
 'use strict';
 
 const inputValidationHandler = require('../handlers/validation.handler');
-const validation = require('../handlers/tokens.handler');
+const validate = require('../handlers/tokens.handler');
 
 module.exports = function(app) {
     const users = require('../controllers/user.controller');
@@ -10,7 +10,7 @@ module.exports = function(app) {
     app.post('/api/v1/users/registration', inputValidationHandler.validateRegistrationInput, users.registration);
 
     // User login...
-    app.post('/api/v1/users/login', inputValidationHandler.validateLoginInput, validation.validateAuthorizationToken, users.login);
+    app.post('/api/v1/users/login', inputValidationHandler.validateLoginInput, validate.validateAuthorizationToken, users.login);
 
 
     //app.post('/api/v1/users/test', validation.validateAuthenticationToken, users.test);
@@ -20,7 +20,7 @@ module.exports = function(app) {
     //app.get('/api/v1/users', users.findAll);
 
     // Get specific user 
-    app.get('/api/v1/users/:userId', users.findById);
+    app.get('/api/v1/users/:userId', validate.AuthenticationToken, users.findById);
 
     // Update specific user
     // Note: possibly to change it from put to patch

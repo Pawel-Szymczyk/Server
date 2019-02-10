@@ -33,7 +33,9 @@ module.exports = {
                     res.sendStatus(403);
                 } else {
                     // return token data...
-                    req.data = data;
+                    // req.data = data;
+                    // console.log(req.data);
+                    req.data = true;
                 }
             });
 
@@ -55,7 +57,7 @@ module.exports = {
         return token;
     }, 
 
-    validateAuthenticationToken: function(req, res, next) {
+    AuthenticationToken: function(req, res, next) {
         //Get auth header token
         const bearerHeader  = req.headers['authenticationtoken'];
 
@@ -74,7 +76,16 @@ module.exports = {
                     res.sendStatus(403);
                 } else {
                     // return token data...
-                    req.expTime = data.exp;
+                    //req.expTime = data.exp;
+                    //req.data = data;
+
+                    // let obj = {
+                    //     isValid: true,
+                    //     exp: data.exp,
+                    // }
+
+                    req.data = true;
+                   // req.data = obj;
                 }
             });
 

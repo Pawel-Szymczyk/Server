@@ -6,64 +6,83 @@ const Plug = db.plugs;
 // Post a plug
 exports.create = (req, res) => {
     
-    
-	// Save to MariaDB database
-    Plug.create({  
-        name: req.body.name,
-        type: req.body.type,
-        // powerState: req.body.powerState,
-        powerState: this.convertBoolInputToStringOutput(req.body.powerState),
-        serialNumber: req.body.serialNumber,
-        topic: req.body.topic,
-        areaId: req.body.areaId
-	})
-    .then(plug => {		
-        // Send created device to client
-        res.json(plug);
-    })
-    .catch(error => res.status(400).send(error))
+    // --------------------------------------------------------------------------
+    // Authentication Token further validation.
+    // Go to tokens.handler.js 
+    //
+    if(req.data) {
+
+        // Save to MariaDB database
+        Plug.create({  
+            name: req.body.name,
+            type: req.body.type,
+            // powerState: req.body.powerState,
+            powerState: this.convertBoolInputToStringOutput(req.body.powerState),
+            serialNumber: req.body.serialNumber,
+            topic: req.body.topic,
+            areaId: req.body.areaId
+        })
+        .then(plug => {		
+            // Send created device to client
+            res.json(plug);
+        })
+        .catch(error => res.status(400).send(error))
+
+    } else {
+        return res.status(405).json({message: 'Your authentication token is invalid'});
+    }
 };
 
 
 
 
 // Find a Plug by Id
-exports.findById = (req, res) => {	
-    Plug.findById(req.params.plugId,
-       // {attributes: { exclude: ["createdAt", "updatedAt"] }}
-    )
-    .then(plug => {
-        if (!plug) {
-            return res.status(404).json({message: "Plug Not Found"})
-        }
+exports.findById = (req, res) => {
+    // --------------------------------------------------------------------------
+    // Authentication Token further validation.
+    // Go to tokens.handler.js 
+    //
+    if(req.data) {	
 
-        var state = this.convertStringInputToBooleanOutput(plug.powerState);
-        // getTurnOnPlugTime(plug.timeStart, plug.timeStop);
+        Plug.findById(req.params.plugId,
+        // {attributes: { exclude: ["createdAt", "updatedAt"] }}
+        )
+        .then(plug => {
+            if (!plug) {
+                return res.status(404).json({message: "Plug Not Found"})
+            }
 
-        // getTurnOnPlugTime(plug.id, plug.timeStart, state);
+            var state = this.convertStringInputToBooleanOutput(plug.powerState);
+            // getTurnOnPlugTime(plug.timeStart, plug.timeStop);
 
-        // if(state == false) {
-        //     console.log( plug.timeStop );
-        // }
+            // getTurnOnPlugTime(plug.id, plug.timeStart, state);
+
+            // if(state == false) {
+            //     console.log( plug.timeStop );
+            // }
 
 
-        var object = {
-            id: plug.id,
-            name: plug.name,
-            type: plug.type,
-            powerState: state,
-            serialNumber: plug.serialNumber,
-            topic: plug.topic,
-            createdAt: plug.createdAt,
-            updatedAt: plug.updatedAt,
-            timeStart: plug.timeStart,
-            lastTime: getTurnOnPlugTime(plug.id, plug.timeStart, state),
-            areaId: plug.areaId
-        }
+            var object = {
+                id: plug.id,
+                name: plug.name,
+                type: plug.type,
+                powerState: state,
+                serialNumber: plug.serialNumber,
+                topic: plug.topic,
+                createdAt: plug.createdAt,
+                updatedAt: plug.updatedAt,
+                timeStart: plug.timeStart,
+                lastTime: getTurnOnPlugTime(plug.id, plug.timeStart, state),
+                areaId: plug.areaId
+            }
 
-        return res.status(200).json(object)
-    })
-    .catch(error => res.status(400).send(error));
+            return res.status(200).json(object)
+        })
+        .catch(error => res.status(400).send(error));
+
+    } else {
+        return res.status(405).json({message: 'Your authentication token is invalid'});
+    }
 };
 
 
@@ -142,20 +161,30 @@ exports.updateMqtt = (object) => {
 
 // Delete a plug by Id
 exports.delete = (req, res) => {
-	return Plug
-        .findById(req.params.plugId)
-        .then(plug => {
-            if(!plug) {
-                return res.status(400).send({
-                    message: 'Plug Not Found',
-                });
-            }
- 
-            return plug.destroy()
-            .then(() => res.status(200).json({message: "Plug removed successfully!"}))
+    // --------------------------------------------------------------------------
+    // Authentication Token further validation.
+    // Go to tokens.handler.js 
+    //
+    if(req.data) {
+
+        return Plug
+            .findById(req.params.plugId)
+            .then(plug => {
+                if(!plug) {
+                    return res.status(400).send({
+                        message: 'Plug Not Found',
+                    });
+                }
+    
+                return plug.destroy()
+                .then(() => res.status(200).json({message: "Plug removed successfully!"}))
+                .catch(error => res.status(400).send(error));
+            })
             .catch(error => res.status(400).send(error));
-        })
-        .catch(error => res.status(400).send(error));
+
+    } else {
+        return res.status(405).json({message: 'Your authentication token is invalid'});
+    }
 };
 
 

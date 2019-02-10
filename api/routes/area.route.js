@@ -1,21 +1,23 @@
 'use strict';
 
+const validate = require('../handlers/tokens.handler');
+
 module.exports = function(app) {
     const areas = require('../controllers/area.controller');
 
     // Create a new area
-    app.post('/api/v1/areas/create', areas.create);
+    app.post('/api/v1/areas/create', validate.AuthenticationToken, areas.create);
 
     // Get all areas
-    app.get('/api/v1/areas', areas.findAll);
+    app.get('/api/v1/areas', validate.AuthenticationToken, areas.findAll);
 
     // Get specific area
-    app.get('/api/v1/areas/:areaId', areas.findById);
+    app.get('/api/v1/areas/:areaId', validate.AuthenticationToken, areas.findById);
 
     // Update specific area
     // Note: possibly to change it from put to patch
-    app.put('/api/v1/areas/:areaId', areas.update);
+    app.put('/api/v1/areas/:areaId', validate.AuthenticationToken, areas.update);
 
     // Delete specific area 
-    app.delete('/api/v1/areas/:areaId', areas.delete);
+    app.delete('/api/v1/areas/:areaId', validate.AuthenticationToken, areas.delete);
 }

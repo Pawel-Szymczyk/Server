@@ -1,18 +1,20 @@
 'use strict';
 
+const validate = require('../handlers/tokens.handler');
+
 module.exports = function (app, mqtt) {
   
     // get plug controller (db) 
     var plug = require('../controllers/plug.controller');
 
     // Create a new plug
-    app.post('/api/v1/devices/plug/create', plug.create);
+    app.post('/api/v1/devices/plug/create',  validate.AuthenticationToken, plug.create);
     
     // Get specific plug
-    app.get('/api/v1/devices/plug/:plugId', plug.findById);
+    app.get('/api/v1/devices/plug/:plugId',  validate.AuthenticationToken, plug.findById);
         
     // Delete specific plug 
-    app.delete('/api/v1/devices/plug/delete/:plugId', plug.delete);
+    app.delete('/api/v1/devices/plug/delete/:plugId',  validate.AuthenticationToken, plug.delete);
  
     // TODO: rewrite url (add a device serial number)
     app.route('/api/v1/devices/plug')
