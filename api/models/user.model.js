@@ -17,6 +17,9 @@ module.exports = (sequelize, Sequelize) => {
         password: {
             type: Sequelize.STRING
         },
+        secretAnswer: {
+            type: Sequelize.STRING
+        },
         authorizationToken: {
             type: Sequelize.STRING
         }

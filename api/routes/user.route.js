@@ -12,6 +12,11 @@ module.exports = function(app) {
     // User login...
     app.post('/api/v1/users/login', inputValidationHandler.validateLoginInput, validate.validateAuthorizationToken, users.login);
 
+    // find user
+    app.post('/api/v1/users/resetpassword', inputValidationHandler.validateResetPassword, users.resetPassword); 
+
+    // update user with new password details
+    app.put('/api/v1/users/newpassword', inputValidationHandler.validateNewPassword, validate.AuthenticationToken, users.newPassword); 
 
     //app.post('/api/v1/users/test', validation.validateAuthenticationToken, users.test);
  

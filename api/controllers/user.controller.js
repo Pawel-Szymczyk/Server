@@ -47,7 +47,8 @@ exports.registration = (req, res) => {
                     email: req.body.email,
                     username: req.body.username,
                     password: hashedPassword.password,
-                    authorizationToken: token
+                    authorizationToken: token,
+                    secretAnswer: req.body.secretAnswer
                 })
                 .then(user => {		
 
@@ -70,6 +71,7 @@ exports.registration = (req, res) => {
 
 
 exports.login = (req, res) => {	
+    
     // --------------------------------------------------------------------------
     // Authorization Token further validation.
     // Go to tokens.handler.js 
@@ -87,7 +89,7 @@ exports.login = (req, res) => {
         )
         .then(user => {
             if (!user){
-                return res.status(404).json({message: "User Not Found"})
+                return res.status(404).json({message: "Wrong username or passowrd."})
             }
 
             bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
@@ -108,7 +110,7 @@ exports.login = (req, res) => {
 
                     return res.status(200).json(userLog)
                 } else {
-                    return res.status(404).json({message: 'Wrong password'})
+                    return res.status(404).json({message: 'Wrong username or passowrd.'})
                 }
             })
 
@@ -121,6 +123,96 @@ exports.login = (req, res) => {
     }
     // --------------------------------------------------------------------------
 };
+
+
+exports.resetPassword = (req, res) => {
+    
+    // --------------------------------------------------------------------------
+    // Find user by its unique email and secret answer
+    //
+    UserDB.findOne(
+        { 
+            where: { 
+                email: req.body.email, 
+                secretAnswer: req.body.secretAnswer
+            }
+        }
+    )
+    .then(user => {
+        if (!user){
+            return res.status(404).json({message: "Wrong credentials"})
+        }
+
+        let authenticationKey = validation.generateAuthenticationToken();
+
+        let obj = {
+            userId: user.id,
+            isValid: true,
+            authenticationToken: authenticationKey
+        };
+
+        return res.status(200).json(obj);
+
+    })
+    .catch(error => res.status(400).send(error));
+};
+
+// update user password
+exports.newPassword = (req, res) => {
+
+    var errors = validationResult(req).formatWith(errorHandler.errorFormatter);
+
+    if (!errors.isEmpty()) {
+        res.status(400).json(errors.array());
+    } else {
+    
+        return UserDB.findById(req.body.id)
+            .then(user => {
+                if(!user){
+                    return res.status(404).json({
+                        message: 'User Not Found',
+                    });
+                }
+
+                let hashedPassword = ({
+                    password: req.body.password
+                })
+
+                bcrypt.genSalt(10, function(err, salt) {
+                    bcrypt.hash(hashedPassword.password, salt, function(err, hash) {
+                        if(err) {
+                            console.log(err);
+                        }
+        
+                        hashedPassword.password = hash;
+
+
+                        return user.update({
+                            // Note: Again security required
+                            password: hashedPassword.password,
+                            
+                        })
+                        .then(() => res.status(200).json({'mnessage': 'Password changed succesfully,'}))
+                        .catch((error) => res.status(400).send(error));
+                    })
+                });
+            })
+            .catch((error) => res.status(400).send(error));		
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // TODO: provide token validation
 // Get all areas

@@ -38,7 +38,7 @@ module.exports = {
         // filter db if email already exists.
         check('email')
             .isEmail().withMessage('Email is not valid.')
-            .isLength({ min:1 }).withMessage('Email name is a required.')
+            .isLength({ min:1 }).withMessage('Email is a required.')
             .normalizeEmail()   // canonicalizes an email address.
             .trim()
             .escape()
@@ -82,7 +82,63 @@ module.exports = {
                     return value;
                 }
             }).withMessage("Passwords don't match."),
+
+        check('secretAnswer')
+            .isLength({min:1}).withMessage('SecretKey is required')
+            .trim()
+            .escape()
+            .stripLow()
     ],
+
+    validateResetPassword: [
+        check('email')
+            .isEmail().withMessage('Email is not valid.')
+            .isLength({ min:1 }).withMessage('Email is a required.')
+            .normalizeEmail()   // canonicalizes an email address.
+            .trim()
+            .escape()
+            .stripLow()
+            .custom(value => {
+                return UserDB.findOne({ where: { email: value, }})
+                .then(user => {
+                    if (!user) {
+                        return Promise.reject('One of the credentials is wrong');
+                    }
+                });
+            }),
+        
+        check('secretAnswer')
+            .isLength({min:1}).withMessage('SecretKey is required')
+            .trim()
+            .escape()
+            .stripLow()
+            .custom(value => {
+                return UserDB.findOne({ where: { secretAnswer: value, }})
+                .then(user => {
+                    if (!user) {
+                        return Promise.reject('One of the credentials is wrong');
+                    }
+                });
+            }),
+    ],
+
+    validateNewPassword: [
+        check('password')
+            .isLength({ min:8 }).withMessage('Password must be at least 8 characters in length.')
+            .matches('[0-9]').withMessage('Password must contain at least 1 number.')
+            .matches('[a-z]').withMessage('Password must contain at least 1 lowercase letter.')
+            .matches('[A-Z]').withMessage('Password must contain at least 1 uppercase letter.')
+            .trim()
+            .escape()
+            .stripLow()
+            .custom((value, {req, loc, path}) => {
+                if (value !== req.body.confirmPassword) {
+                    return false;
+                } else {
+                    return value;
+                }
+            }).withMessage("Passwords don't match."),
+    ]
 
 
 };
