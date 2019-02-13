@@ -75,6 +75,8 @@ module.exports = {
                 if(err) {
                     res.sendStatus(403);
                 } else {
+
+                    console.log('true');
                     // return token data...
                     //req.expTime = data.exp;
                     //req.data = data;

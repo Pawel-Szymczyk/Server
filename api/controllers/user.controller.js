@@ -108,7 +108,9 @@ exports.login = (req, res) => {
                         authenticationToken: authenticationKey
                     }
 
-                    return res.status(200).json(userLog)
+                 //   res.user = userLog;
+
+                    return res.status(200).json({user: userLog});
                 } else {
                     return res.status(404).json({message: 'Wrong username or passowrd.'})
                 }
