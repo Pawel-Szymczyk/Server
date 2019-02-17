@@ -1,12 +1,13 @@
 'use strict';
 
+const inputValidationHandler = require('../handlers/inputValidation.handler');
 const validate = require('../handlers/tokens.handler');
 
 module.exports = function(app) {
     const areas = require('../controllers/area.controller');
 
     // Create a new area
-    app.post('/api/v1/areas/create', validate.AuthenticationToken, areas.create);
+    app.post('/api/v1/areas/create', validate.AuthenticationToken, inputValidationHandler.validateAreaInput, areas.create);
 
     // Get all areas
     app.get('/api/v1/areas', validate.AuthenticationToken, areas.findAll);

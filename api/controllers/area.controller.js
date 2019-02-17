@@ -1,30 +1,38 @@
+const { validationResult } = require('express-validator/check');
+const errorHandler = require('../handlers/error.handler');
 const db = require('../config/db.config');
 const Area = db.areas;
 
 // Post an Area
 exports.create = (req, res) => {
     
-    // --------------------------------------------------------------------------
-    // Authentication Token further validation.
-    // Go to tokens.handler.js 
-    //
-    if(req.data) {
+    var errors = validationResult(req).formatWith(errorHandler.errorFormatter);
 
-        // Save to MariaDB database
-        Area.create({  
-            name: req.body.name,
-            areaState: req.body.areaState,
-            owner: req.body.owner
-        })
-        .then(area => {		
-            // Send created area to client
-            res.json(area);
-            
-        })
-        .catch(error => res.status(400).send(error))
-
+    if (!errors.isEmpty()) {
+        res.status(400).json({error: errors.array()});
     } else {
-        return res.status(405).json({message: 'Your authentication token is invalid'});
+        // --------------------------------------------------------------------------
+        // Authentication Token further validation.
+        // Go to tokens.handler.js 
+        //
+        if(req.data) {
+
+            // Save to MariaDB database
+            Area.create({  
+                name: req.body.name,
+                areaState: req.body.areaState,
+                owner: req.body.owner
+            })
+            .then(area => {		
+                // Send created area to client
+                res.json(area);
+                
+            })
+            .catch(error => res.status(400).send(error))
+
+        } else {
+            return res.status(405).json({message: 'Your authentication token is invalid'});
+        }
     }
 };
 
@@ -74,6 +82,7 @@ exports.findAll = (req, res) => {
 
                                     return Object.assign(
                                         {
+                                            id: rollet.id,
                                             name: rollet.name,
                                             type: rollet.type,
                                             powerState: rollet.powerState,
@@ -89,6 +98,7 @@ exports.findAll = (req, res) => {
             
                                     return Object.assign(
                                         {
+                                            id: plug.id,
                                             name: plug.name,
                                             type: plug.type,
                                             powerState: plug.powerState,

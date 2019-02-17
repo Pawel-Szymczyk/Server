@@ -12,7 +12,7 @@ exports.registration = (req, res) => {
 
     var errors = validationResult(req).formatWith(errorHandler.errorFormatter);
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) { 
         res.status(400).json(errors.array());
     } else {
 

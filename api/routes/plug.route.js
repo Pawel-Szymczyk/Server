@@ -39,11 +39,12 @@ module.exports = function (app, mqtt) {
                 }
 
                 // update a device
+                //mqtt.sendMessage('/devices/plug/' + res.body.serialNumber + 'update', JSON.stringify(object));
                 mqtt.sendMessage('/devices/plug/update', JSON.stringify(object));
                 //let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
 
                 // update a database
-                plug.updateMqtt(dbObject);
+                plug.updateMqttDB(dbObject);
 
                 // rollet.changeRolletPosition(); // update db here ?
 

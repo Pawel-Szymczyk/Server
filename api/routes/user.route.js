@@ -1,6 +1,6 @@
 'use strict';
 
-const inputValidationHandler = require('../handlers/validation.handler');
+const inputValidationHandler = require('../handlers/userValidation.handler');
 const validate = require('../handlers/tokens.handler');
 
 module.exports = function(app) {

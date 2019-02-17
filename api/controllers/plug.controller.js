@@ -1,19 +1,21 @@
 'use strict';
 
+const pConsumption = require('../middleware/powerConsumption');
+
 const db = require('../config/db.config');
 const Plug = db.plugs;
 
 // Post a plug
 exports.create = (req, res) => {
-    
+
     // --------------------------------------------------------------------------
     // Authentication Token further validation.
-    // Go to tokens.handler.js 
+    // Go to tokens.handler.js
     //
     if(req.data) {
 
         // Save to MariaDB database
-        Plug.create({  
+        Plug.create({
             name: req.body.name,
             type: req.body.type,
             // powerState: req.body.powerState,
@@ -22,7 +24,7 @@ exports.create = (req, res) => {
             topic: req.body.topic,
             areaId: req.body.areaId
         })
-        .then(plug => {		
+        .then(plug => {
             // Send created device to client
             res.json(plug);
         })
@@ -40,9 +42,9 @@ exports.create = (req, res) => {
 exports.findById = (req, res) => {
     // --------------------------------------------------------------------------
     // Authentication Token further validation.
-    // Go to tokens.handler.js 
+    // Go to tokens.handler.js
     //
-    if(req.data) {	
+    if(req.data) {
 
         Plug.findById(req.params.plugId,
         // {attributes: { exclude: ["createdAt", "updatedAt"] }}
@@ -53,6 +55,7 @@ exports.findById = (req, res) => {
             }
 
             var state = this.convertStringInputToBooleanOutput(plug.powerState);
+            console.log("power state: " + state);
             // getTurnOnPlugTime(plug.timeStart, plug.timeStop);
 
             // getTurnOnPlugTime(plug.id, plug.timeStart, state);
@@ -71,8 +74,8 @@ exports.findById = (req, res) => {
                 topic: plug.topic,
                 createdAt: plug.createdAt,
                 updatedAt: plug.updatedAt,
-                timeStart: plug.timeStart,
-                lastTime: getTurnOnPlugTime(plug.id, plug.timeStart, state),
+                //timeStart: plug.timeStart,
+                //lastTime: pConsumption.getTurnOnPlugTime(plug.id, plug.updatedAt, state),
                 areaId: plug.areaId
             }
 
@@ -86,54 +89,29 @@ exports.findById = (req, res) => {
 };
 
 
-function getTurnOnPlugTime(id, start, state) {
-    
-    var time;
-
-     if( state == true) {
-        var stop = new Date();
-
-        var res = Math.abs(start - stop) / 1000;
-
-
-        // get hours        
-        var hours = Math.floor(res / 3600) % 24;        
-    // console.log("Difference (Hours): "+hours);  
-
-        // get minutes
-        var minutes = Math.floor(res / 60) % 60;
-    // console.log("Difference (Minutes): "+minutes);  
-
-        // get seconds
-        var seconds = res % 60;
-    // console.log("Difference (Seconds): "+seconds);  
-
-        console.log(hours + ':' + minutes + ':' + seconds);
-        
-        
-        
-        time = hours + ':' + minutes + ':' + seconds;
-
-
-    }
-
-    return time;
-    
-
-}
-
-
+var objOn;
+var objOff;
 
 
 // Update a plug base on mqtt state
-exports.updateMqtt = (object) => {
+exports.updateMqttDB = (object) => {
 
+    
+    
+    // let objOn = new Date();
+    // let objOff = new Date();
+    // let totalOn = new Date();
+    // objOn.setHours(0,0,0,0);
+    // objOff.setHours(0,0,0,0);
+    // totalOn.setHours(0,0,0,0);
 
-    var tStart;
+  //  console.log(objOn.getTime(), objOff.getTime(), totalOn.getTime());
 
-    if(object.powerState == "on") {
-        tStart = new Date();
-    } 
+    // var tStart;
+
+    // if(object.powerState == "on") {
+    //     tStart = new Date();
+    // }
 
 
 	return Plug.findById(object.plugId)
@@ -143,27 +121,65 @@ exports.updateMqtt = (object) => {
                     message: 'Plug Not Found',
                 });
             }
-            return plug.update({
-                name: object.name,
-                type: object.type,
-                powerState: object.powerState,
-                serialNumber: object.serialNumber,
-                topic: object.topic,
-                //lastOnTime: date.getSeconds(), // to change
-                timeStart: tStart,
-                areaId: object.areaId
-            })
+            console.log("CreatedAt: " + plug.createdAt);
+
+            
+            if(object.powerState == "on") {
+                objOn = pConsumption.returnSwitchOnOff();
+                console.log("switch ON: " + objOn);
+            }
+
+            if(object.powerState == "off") {
+                objOff = pConsumption.returnSwitchOnOff();
+                console.log("switch OFF: " + objOff);
+            }
+            //console.log("switch OFF !!: " + objOff);
+
+            let overallTotal = pConsumption.returnOverallTotal(new Date(), plug.createdAt);
+            console.log("overall time: " + overallTotal);
+
+
+            
+
+            if(object.powerState == "on") {
+                
+                console.log("return Total Off: " + returnTotalOff);
+            }
+
+            if(object.powerState == "off") {
+
+            }
+
+
+            // let totalOn;
+            // if(totalOn == null) {
+            //     totalOn = 0;
+            // }
+            // let returnTotalOn = pConsumption.returnTotalOn(totalOn.getTime(), objOff.getTime(), objOn.getTime());
+            // console.log("returnTotalOn time: " + returnTotalOn);
+
+
+            // return plug.update({
+            //     name: object.name,
+            //     type: object.type,
+            //     powerState: object.powerState,
+            //     serialNumber: object.serialNumber,
+            //     topic: object.topic,
+            //     //lastOnTime: date.getSeconds(), // to change
+            //     //timeStart: tStart,
+            //     areaId: object.areaId
+            // })
             // .then(() => res.status(200).json(plug))
             // .catch((error) => res.status(400).send(error));
         })
-		.catch((error) => res.status(400).send(error));			 
+		.catch((error) => res.status(400).send(error));
 };
 
 // Delete a plug by Id
 exports.delete = (req, res) => {
     // --------------------------------------------------------------------------
     // Authentication Token further validation.
-    // Go to tokens.handler.js 
+    // Go to tokens.handler.js
     //
     if(req.data) {
 
@@ -175,7 +191,7 @@ exports.delete = (req, res) => {
                         message: 'Plug Not Found',
                     });
                 }
-    
+
                 return plug.destroy()
                 .then(() => res.status(200).json({message: "Plug removed successfully!"}))
                 .catch(error => res.status(400).send(error));
@@ -196,7 +212,7 @@ exports.convertBoolInputToStringOutput = (boolInput) => {
     } else {
         convertedState = "off";
     }
- 
+
     return convertedState;
 }
 
@@ -207,6 +223,6 @@ exports.convertStringInputToBooleanOutput = (stringInput) => {
     } else {
         convertedState = false;
     }
- 
+
     return convertedState;
 }
