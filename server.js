@@ -35,6 +35,7 @@ require('./api/routes/area.route')(app);
 
 require('./api/routes/rollet.route')(app, mqttClient);
 require('./api/routes/plug.route')(app, mqttClient);
+require('./api/routes/temp.route')(app, mqttClient);
 
 // -------------------------------------------------
 

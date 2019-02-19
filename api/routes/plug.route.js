@@ -37,16 +37,15 @@ module.exports = function (app, mqtt) {
                     topic: req.body.topic,
                     areaId: req.body.areaId
                 }
+                
 
                 // update a device
-                //mqtt.sendMessage('/devices/plug/' + res.body.serialNumber + 'update', JSON.stringify(object));
-                mqtt.sendMessage('/devices/plug/update', JSON.stringify(object));
+                mqtt.sendMessage('/devices/plug/' + req.body.serialNumber + '/update', JSON.stringify(object));
+                //mqtt.sendMessage('/devices/plug/update', JSON.stringify(object));
                 //let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
 
                 // update a database
                 plug.updateMqttDB(dbObject);
-
-                // rollet.changeRolletPosition(); // update db here ?
 
                 res.status(200).send({state: plug.convertStringInputToBooleanOutput(convertedState)});
                 // if(message !== 'x'){

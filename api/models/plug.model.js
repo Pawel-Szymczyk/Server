@@ -25,22 +25,21 @@ module.exports = (sequelize, Sequelize) => {
         updatedAt: {
             type: Sequelize.DATE
         },
-                // TODO: add these fields to database
-        // switch_ON: {
-        //     type: Sequelize.DATE
-        // },
-        // switch_OFF: {
-        //     type: Sequelize.DATE
-        // },
-        // overallTotal: {
-        //     type: Sequelize.DATE
-        // },
-        // total_ON: {
-        //     type: Sequelize.DATE
-        // },
-        // total_OFF: {
-        //     type: Sequelize.DATE
-        // },
+        switch_ON: {
+            type: Sequelize.DATE
+        },
+        switch_OFF: {
+            type: Sequelize.DATE
+        },
+        overallTotal: {
+            type: Sequelize.STRING
+        },
+        total_ON: {
+            type: Sequelize.STRING
+        },
+        total_OFF: {
+            type: Sequelize.STRING
+        },
 
         // timeStart: {
         //     type: Sequelize.TIME

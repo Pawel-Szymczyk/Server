@@ -30,18 +30,21 @@ class MqttHandler {
     });
 
     // mqtt subscriptions
-    this.mqttClient.subscribe('/devices/rollet/update', {qos: 1});
-    this.mqttClient.subscribe('/devices/rgb', {qos: 1});
-    this.mqttClient.subscribe('/devices/plug/update', {qos: 1});
+    // this.mqttClient.subscribe('/devices/rollet/update', {qos: 1});
+    // this.mqttClient.subscribe('/devices/plug/update', {qos: 1});
+    this.mqttClient.subscribe('/devices/temp/TS000001-CUBE/update', {qos: 1});
+    this.mqttClient.subscribe('/devices/rgb/RGBLT000001-CUBE/update', {qos: 1});
+    this.mqttClient.subscribe('/devices/rollet/RT000001-CUBE/update', {qos: 1});
+    this.mqttClient.subscribe('/devices/plug/PG000001-CUBE/update', {qos: 1});
 
     // When a message arrives, console.log it
-    // this.mqttClient.on('message', function (topic, message) {
-    //  // console.log(message.toString());
-    //   // use some method to receive the mesage. <here> !
-    //      var msg = message.toString();
-    //     // console.log(msg);
-    //     this.message = msg;
-    // });
+    this.mqttClient.on('message', function (topic, message) {
+      console.log(message.toString());
+      // use some method to receive the mesage. <here> !
+        //  var msg = message.toString();
+        // // console.log(msg);
+        // this.message = msg;
+    });
 
     this.mqttClient.on('close', () => {
       console.log(`mqtt client disconnected`);
@@ -54,16 +57,12 @@ class MqttHandler {
   }
 
   getMessages() {
-      this.mqttClient.on('message', (topic, message) => {
-           var msg = message.toString();
-        //    console.log("hehehehe")
-          //  console.log(msg);
-            this.retMessage = msg;
+    this.mqttClient.on('message', (topic, message) => {
+        var msg = message.toString();
+        this.retMessage = msg;
+      });
 
-       });
-
-        return this.retMessage;
-       
+    return this.retMessage;
   }
 
   

@@ -18,10 +18,14 @@ exports.create = (req, res) => {
         Plug.create({
             name: req.body.name,
             type: req.body.type,
-            // powerState: req.body.powerState,
             powerState: this.convertBoolInputToStringOutput(req.body.powerState),
             serialNumber: req.body.serialNumber,
             topic: req.body.topic,
+            switch_ON: new Date().setHours(0,0,0,0),
+            switch_OFF: new Date(),
+            overallTotal: '0:0:0:0',
+            total_ON: '0:0:0:0',
+            total_OFF: '0:0:0:0',
             areaId: req.body.areaId
         })
         .then(plug => {
@@ -89,30 +93,14 @@ exports.findById = (req, res) => {
 };
 
 
-var objOn;
-var objOff;
-
 
 // Update a plug base on mqtt state
 exports.updateMqttDB = (object) => {
-
     
-    
-    // let objOn = new Date();
-    // let objOff = new Date();
-    // let totalOn = new Date();
-    // objOn.setHours(0,0,0,0);
-    // objOff.setHours(0,0,0,0);
-    // totalOn.setHours(0,0,0,0);
-
-  //  console.log(objOn.getTime(), objOff.getTime(), totalOn.getTime());
-
-    // var tStart;
-
-    // if(object.powerState == "on") {
-    //     tStart = new Date();
-    // }
-
+    let objOn;
+    let objOff;
+    let totalTime_On;
+    let totalTime_Off;
 
 	return Plug.findById(object.plugId)
 		.then(plug => {
@@ -121,58 +109,53 @@ exports.updateMqttDB = (object) => {
                     message: 'Plug Not Found',
                 });
             }
-            console.log("CreatedAt: " + plug.createdAt);
 
+            let overallTime = pConsumption.returnOverallTotal(new Date(), plug.createdAt);
             
-            if(object.powerState == "on") {
-                objOn = pConsumption.returnSwitchOnOff();
-                console.log("switch ON: " + objOn);
-            }
+            // if(object.powerState == "on") {
+            //     objOn = pConsumption.returnSwitchOnOff();
+            //     objOff = plug.switch_OFF;
 
-            if(object.powerState == "off") {
-                objOff = pConsumption.returnSwitchOnOff();
-                console.log("switch OFF: " + objOff);
-            }
-            //console.log("switch OFF !!: " + objOff);
+            // //    console.log("objOn: " + objOn);
+            // //    console.log("objOff: " + objOff);
 
-            let overallTotal = pConsumption.returnOverallTotal(new Date(), plug.createdAt);
-            console.log("overall time: " + overallTotal);
+            //    //console.log("total time off: " + plug.total_OFF);
+            //     totalTime_Off = pConsumption.returnTotalTimeOff(plug);
+               
+            // //    console.log("total time off: " + totalTime_Off);
 
+            // } 
 
-            
+            // if((object.powerState == "off")) {
+            //     objOn = plug.switch_ON;
+            //     objOff = pConsumption.returnSwitchOnOff();
 
-            if(object.powerState == "on") {
-                
-                console.log("return Total Off: " + returnTotalOff);
-            }
+            //   //console.log("total time on: " + plug.total_ON)
 
-            if(object.powerState == "off") {
+            //     totalTime_On = pConsumption.returnTotalTimeOn(plug);
 
-            }
+            // //   console.log("total time on: " + totalTime_On);
 
-
-            // let totalOn;
-            // if(totalOn == null) {
-            //     totalOn = 0;
             // }
-            // let returnTotalOn = pConsumption.returnTotalOn(totalOn.getTime(), objOff.getTime(), objOn.getTime());
-            // console.log("returnTotalOn time: " + returnTotalOn);
 
-
-            // return plug.update({
-            //     name: object.name,
-            //     type: object.type,
-            //     powerState: object.powerState,
-            //     serialNumber: object.serialNumber,
-            //     topic: object.topic,
-            //     //lastOnTime: date.getSeconds(), // to change
-            //     //timeStart: tStart,
-            //     areaId: object.areaId
-            // })
-            // .then(() => res.status(200).json(plug))
-            // .catch((error) => res.status(400).send(error));
+          
+            return plug.update({
+                name: object.name,
+                type: object.type,
+                powerState: object.powerState,
+                serialNumber: object.serialNumber,
+                topic: object.topic,
+                // switch_ON: objOn,
+                // switch_OFF: objOff,
+                // overallTotal: overallTime,
+                // total_OFF: totalTime_Off,
+                // total_ON: totalTime_On,
+                areaId: object.areaId
+            })
+            //.then(() => res.status(200).json(plug)) // do not return anything
+            .catch((error) => res.status(400).send(error));
         })
-		.catch((error) => res.status(400).send(error));
+		.catch(error => res.status(400).send(error));
 };
 
 // Delete a plug by Id
