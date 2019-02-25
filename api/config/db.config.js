@@ -27,13 +27,16 @@ db.users = require('../models/user.model')(sequelize, Sequelize);
 db.rollets = require('../models/rollet.model')(sequelize, Sequelize);
 db.plugs = require('../models/plug.model')(sequelize, Sequelize);
 db.temps = require('../models/temp.model')(sequelize, Sequelize);
+db.rgbs = require('../models/rgb.model')(sequelize, Sequelize);
 
 // Relations
 db.areas.hasMany(db.rollets);
 db.areas.hasMany(db.plugs);
+db.areas.hasMany(db.rgbs);
 
 db.rollets.belongsTo(db.areas);
 db.plugs.belongsTo(db.areas);
 db.temps.belongsTo(db.areas);
+db.rgbs.belongsTo(db.areas);
  
 module.exports = db;

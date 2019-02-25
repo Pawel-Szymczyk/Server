@@ -23,9 +23,9 @@ var mqttClient = new mqttHandler();
     
 
 // force: true will drop the table if it already exists
-// db.sequelize.sync({force: true}).then(() => {
-//     console.log('Drop and Resync with { force: true }');
-//   });
+db.sequelize.sync({force: true}).then(() => {
+    console.log('Drop and Resync with { force: true }');
+  });
 
 // -------------------------------------------------
 // Import routes.
@@ -36,6 +36,7 @@ require('./api/routes/area.route')(app);
 require('./api/routes/rollet.route')(app, mqttClient);
 require('./api/routes/plug.route')(app, mqttClient);
 require('./api/routes/temp.route')(app, mqttClient);
+require('./api/routes/rgb.route')(app, mqttClient);
 
 // -------------------------------------------------
 
