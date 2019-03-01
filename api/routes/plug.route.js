@@ -45,7 +45,7 @@ module.exports = function (app, mqtt) {
                 //let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
 
                 // update a database
-                plug.updateMqttDB(dbObject);
+               // plug.updateMqttDB(dbObject);
 
                 res.status(200).send({state: plug.convertStringInputToBooleanOutput(convertedState)});
                 // if(message !== 'x'){

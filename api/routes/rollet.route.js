@@ -30,7 +30,8 @@ module.exports = function (app, mqtt) {
                     action: req.body.action
                 };
 
-                mqtt.sendMessage('/devices/rollet/' + req.body.serialNumber + '/update', JSON.stringify(object));
+                 mqtt.sendMessage('/devices/rollet/' + req.body.serialNumber + '/update', JSON.stringify(object));
+                //mqtt.sendMessage('esp/test', 'hello from local server');
                 //mqtt.sendMessage('/devices/rollet/update', JSON.stringify(object));
                 let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
 

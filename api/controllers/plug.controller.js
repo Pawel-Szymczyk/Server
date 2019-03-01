@@ -97,10 +97,6 @@ exports.findById = (req, res) => {
 // Update a plug base on mqtt state
 exports.updateMqttDB = (object) => {
     
-    let objOn;
-    let objOff;
-    let totalTime_On;
-    let totalTime_Off;
 
 	return Plug.findById(object.plugId)
 		.then(plug => {

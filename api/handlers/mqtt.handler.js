@@ -10,8 +10,6 @@ class MqttHandler {
 
     this.retMessage = '?';
   }
-
-
   
   connect() {
 
@@ -30,8 +28,6 @@ class MqttHandler {
     });
 
     // mqtt subscriptions
-    // this.mqttClient.subscribe('/devices/rollet/update', {qos: 1});
-    // this.mqttClient.subscribe('/devices/plug/update', {qos: 1});
     this.mqttClient.subscribe('/devices/temp/TS000001-CUBE/update', {qos: 1});
     this.mqttClient.subscribe('/devices/rgb/RGBLT000001-CUBE/update', {qos: 1});
     this.mqttClient.subscribe('/devices/rollet/RT000001-CUBE/update', {qos: 1});
@@ -64,8 +60,6 @@ class MqttHandler {
 
     return this.retMessage;
   }
-
-  
 
 }
 
