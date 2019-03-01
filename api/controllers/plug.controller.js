@@ -21,11 +21,11 @@ exports.create = (req, res) => {
             powerState: this.convertBoolInputToStringOutput(req.body.powerState),
             serialNumber: req.body.serialNumber,
             topic: req.body.topic,
-            switch_ON: new Date().setHours(0,0,0,0),
-            switch_OFF: new Date(),
-            overallTotal: '0:0:0:0',
-            total_ON: '0:0:0:0',
-            total_OFF: '0:0:0:0',
+            // switch_ON: new Date().setHours(0,0,0,0),
+            // switch_OFF: new Date(),
+            // overallTotal: '0:0:0:0',
+            // total_ON: '0:0:0:0',
+            // total_OFF: '0:0:0:0',
             areaId: req.body.areaId
         })
         .then(plug => {
