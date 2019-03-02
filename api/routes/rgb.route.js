@@ -19,31 +19,34 @@ module.exports = function (app, mqtt) {
     // // Delete specific rollet 
     // app.delete('/api/v1/devices/rollet/delete/:rolletId', validate.AuthenticationToken, rollet.delete);
 
-    // // MQTT rollet controll
-    // app.route('/api/v1/devices/rollet')
-    //     .post(
+    // MQTT rollet controll
+    app.route('/api/v1/devices/rgb')
+        .post(
             
-    //         function(req, res) {
+            function(req, res) {
                 
-    //             var object = {
-    //                 state: req.body.state,
-    //                 action: req.body.action
-    //             };
+                var object = {
+                    state: req.body.state,
+                    hue: req.body.hue,
+                    saturation: req.body.saturation,
+                    value: req.body.value,
+                    brightness: req.body.brightness,
+                    option: req.body.option
+                };
 
-    //             mqtt.sendMessage('/devices/rollet/' + req.body.serialNumber + '/update', JSON.stringify(object));
-    //             //mqtt.sendMessage('/devices/rollet/update', JSON.stringify(object));
-    //             let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
+                mqtt.sendMessage('/devices/rgb/' + req.body.serialNumber + '/update', JSON.stringify(object));
 
-    //             rollet.changeRolletPosition(); // update db here ?
+                let message = mqtt.getMessages();   // problem the returned message is always behind one msg; 
 
-    //             res.status(200).send(object);
-    //             // if(message !== 'x'){
-    //             //     res.status(200).send(JSON.parse(message));
-    //             // } else {
-    //             //     res.status(200).send(object);
-    //             // }
-    //         }
-    //     );
+
+                res.status(200).send(object);
+                // if(message !== 'x'){
+                //     res.status(200).send(JSON.parse(message));
+                // } else {
+                //     res.status(200).send(object);
+                // }
+            }
+        );
     
 
 };
