@@ -94,6 +94,8 @@ exports.login = (req, res) => {
             }
                 console.log(req.body.password + ', '+ user.password)
             bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
+
+                console.log(isMatch)
                 //if(err) throw err;
                 if(isMatch) {
 
