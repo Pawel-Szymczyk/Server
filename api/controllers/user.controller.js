@@ -89,6 +89,7 @@ exports.login = (req, res) => {
         )
         .then(user => {
             if (!user){
+                console.log('no users')
                 return res.status(404).json({message: "Wrong username or passowrd."})
             }
 
