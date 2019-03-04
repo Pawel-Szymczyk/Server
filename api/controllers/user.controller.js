@@ -92,10 +92,8 @@ exports.login = (req, res) => {
                 console.log('no users')
                 return res.status(404).json({message: "Wrong username or passowrd."})
             }
-                console.log(req.body.password + ', '+ user.password)
             bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
 
-                console.log(isMatch)
                 //if(err) throw err;
                 if(isMatch) {
 
@@ -115,7 +113,6 @@ exports.login = (req, res) => {
 
                     return res.status(200).json({user: userLog});
                 } else {
-                    console.log('wrong in decryption')
                     return res.status(404).json({message: 'Wrong username or passowrd.'})
                 }
             })
