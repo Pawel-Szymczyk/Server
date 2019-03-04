@@ -113,6 +113,7 @@ exports.login = (req, res) => {
 
                     return res.status(200).json({user: userLog});
                 } else {
+                    console.log('wrong in decryption')
                     return res.status(404).json({message: 'Wrong username or passowrd.'})
                 }
             })
