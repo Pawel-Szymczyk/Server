@@ -52,7 +52,7 @@ module.exports = {
         // generate random key.
         var id = crypto.randomBytes(20).toString('hex');
 
-        var token = jwt.sign({data: id}, env.secretKey, {expiresIn: '1h'});
+        var token = jwt.sign({data: id}, env.secretKey, {expiresIn: '1m'}); // change to 24 h
     
         return token;
     }, 
