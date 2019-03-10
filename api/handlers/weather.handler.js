@@ -56,6 +56,12 @@ class WeatherHandler {
         });
     }
 
+    getTheWeather(result) {
+        weather.getAllWeather(function(err, JSONObj){
+            result(JSONObj);
+        });
+    }
+
 }
 
 module.exports = WeatherHandler;
