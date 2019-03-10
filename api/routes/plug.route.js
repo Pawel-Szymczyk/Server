@@ -38,7 +38,7 @@ module.exports = function (app, mqtt) {
                     areaId: req.body.areaId
                 }
                 
-
+                
                 // update a device
                 mqtt.sendMessage('/devices/plug/' + req.body.serialNumber + '/update', JSON.stringify(object));
                 //mqtt.sendMessage('/devices/plug/update', JSON.stringify(object));

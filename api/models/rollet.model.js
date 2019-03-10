@@ -14,6 +14,9 @@ module.exports = (sequelize, Sequelize) => {
         actionState: {
             type: Sequelize.STRING
         },
+        serialNumber: {
+            type: Sequelize.STRING
+        },
         topic: {
             type: Sequelize.STRING
         },

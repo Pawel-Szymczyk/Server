@@ -10,17 +10,20 @@ const bodyParser = require("body-parser");
 //
 const db = require('./api/config/db.config');
 var mqttHandler = require('./api/handlers/mqtt.handler');
+var weatherHandler = require('./api/handlers/weather.handler');
 // require('./api/handlers/password.handler');
 // -------------------------------------------------
 
 var app = express();
-
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
 var mqttClient = new mqttHandler();
     mqttClient.connect();
     
+
+var weather = new weatherHandler();
+    weather.setup();
 
 // force: true will drop the table if it already exists
 // db.sequelize.sync({force: true}).then(() => {
@@ -37,6 +40,8 @@ require('./api/routes/rollet.route')(app, mqttClient);
 require('./api/routes/plug.route')(app, mqttClient);
 require('./api/routes/temp.route')(app, mqttClient);
 require('./api/routes/rgb.route')(app, mqttClient);
+
+require('./api/routes/weather.route')(app, weather);
 
 // -------------------------------------------------
 

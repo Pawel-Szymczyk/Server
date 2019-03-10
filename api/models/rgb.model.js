@@ -11,7 +11,24 @@ module.exports = (sequelize, Sequelize) => {
         powerState: {
             type: Sequelize.STRING
         },
-        // add colors
+        serialNumber: {
+            type: Sequelize.STRING
+        },
+        hue: {
+            type: Sequelize.INTEGER
+        },
+        saturation: {
+            type: Sequelize.INTEGER
+        },
+        value: {
+            type: Sequelize.INTEGER
+        },
+        brightness: {
+            type: Sequelize.INTEGER
+        },
+        option: {
+            type: Sequelize.STRING
+        },
         topic: {
             type: Sequelize.STRING
         },
