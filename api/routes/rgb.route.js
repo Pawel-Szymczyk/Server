@@ -3,24 +3,25 @@
 const validate = require('../handlers/tokens.handler');
 
 module.exports = function (app, mqtt) {
+
+    // get rgb controller (db)
+    let rgb = require('../controllers/rgb.controller');
   
-    // get rollet controller (db) 
-    // var rollet = require('../controllers/rollet.controller');
 
-    // // Create a new rollet
-    // app.post('/api/v1/devices/rollet/create', validate.AuthenticationToken, rollet.create);
+    // Create a new rgb
+    app.post('/api/v1/devices/rgb/create', validate.AuthenticationToken, rgb.create);
     
-    // // Get specific rollet
-    // app.get('/api/v1/devices/rollet/:rolletId', validate.AuthenticationToken, rollet.findById);
+    // Get specific rgb
+    app.get('/api/v1/devices/rgb/:rgbId', validate.AuthenticationToken, rgb.findById);
     
-    // // Update specific rollet
-    // app.put('/api/v1/devices/rollet/:rolletId', validate.AuthenticationToken, rollet.update);
+    // Update specific rgb
+    app.put('/api/v1/devices/rgb/:rgbId', validate.AuthenticationToken, rgb.update);
     
-    // // Delete specific rollet 
-    // app.delete('/api/v1/devices/rollet/delete/:rolletId', validate.AuthenticationToken, rollet.delete);
+    // Delete specific rgb 
+    app.delete('/api/v1/devices/rgb/delete/:rgbId', validate.AuthenticationToken, rgb.delete);
 
-    // MQTT rollet controll
-    app.route('/api/v1/devices/rgb')
+    // MQTT rgb controll
+    app.route('/api/v1/devices/rgb', validate.AuthenticationToken)
         .post(
             
             function(req, res) {
