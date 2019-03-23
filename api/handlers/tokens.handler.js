@@ -6,7 +6,8 @@ module.exports = {
 
     generateAuthorizationToken: function(data) {
             
-        var token = jwt.sign({data}, env.secretKey);
+        var token = jwt.sign({data}, env.secretKey); // (default algorithm: HS256)
+        // var token = jwt.sign({data}, env.secretKey, {algorithm:  "RS256"});
     
         return token;
     },
