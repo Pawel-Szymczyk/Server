@@ -75,6 +75,7 @@ describe('Login User - API Test', function() {
       .expect(function(response) {
         expect(response.body).not.to.be.empty;
         expect(response.body).to.be.an('object');
+        console.log(response.body);
       })
       .end(done);
   }); 
