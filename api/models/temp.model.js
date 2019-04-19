@@ -19,27 +19,6 @@ module.exports = (sequelize, Sequelize) => {
         //     type: Sequelize.STRING
         // },
 
-        // createdAt: {
-        //     type: Sequelize.DATE
-        // },
-        // updatedAt: {
-        //     type: Sequelize.DATE
-        // },
-        // switch_ON: {
-        //     type: Sequelize.DATE
-        // },
-        // switch_OFF: {
-        //     type: Sequelize.DATE
-        // },
-        // overallTotal: {
-        //     type: Sequelize.STRING
-        // },
-        // total_ON: {
-        //     type: Sequelize.STRING
-        // },
-        // total_OFF: {
-        //     type: Sequelize.STRING
-        // },
 
         // timeStart: {
         //     type: Sequelize.TIME

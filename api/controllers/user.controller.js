@@ -206,19 +206,8 @@ exports.newPassword = (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // TODO: provide token validation
-// Get all areas
+// Get all users
 exports.findAll = (req, res) => {
     UserDB.findAll({
         attributes: { exclude: ["createdAt", "updatedAt"] } // I m not sure if I want to remove it from req
@@ -229,7 +218,7 @@ exports.findAll = (req, res) => {
     .catch(error => res.status(400).send(error))
 };
 
-// Find a Area by Id
+// Find a user by Id
 exports.findById = (req, res) => {	
 	UserDB.findById(req.params.userId,
         {attributes: { exclude: ["createdAt", "updatedAt"] }}
@@ -244,7 +233,7 @@ exports.findById = (req, res) => {
     .catch(error => res.status(400).send(error));
 };
 
-// Update an Area
+// Update an user
 exports.update = (req, res) => {
 	return UserDB.findById(req.params.userId)
 		.then(user => {
@@ -267,7 +256,7 @@ exports.update = (req, res) => {
 		.catch((error) => res.status(400).send(error));			 
 };
 
-// Delete an Area by Id
+// Delete an user by Id
 exports.delete = (req, res) => {
 	return UserDB
         .findById(req.params.userId)

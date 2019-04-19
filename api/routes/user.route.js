@@ -20,9 +20,6 @@ module.exports = function(app) {
 
     //app.post('/api/v1/users/test', validation.validateAuthenticationToken, users.test);
  
-    // Get all areas
-    // Note: propably it will not be used at all
-    //app.get('/api/v1/users', users.findAll);
 
     // Get specific user 
     app.get('/api/v1/users/:userId', validate.AuthenticationToken, users.findById);
